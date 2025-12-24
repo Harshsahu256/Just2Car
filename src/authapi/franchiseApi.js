@@ -21,6 +21,8 @@ export const FRANCHISE_API_ENDPOINTS = {
 
      // ✅ NEW: GET INQUIRIES
   GET_INQUIRIES: `${FRANCHISE_BASE_URL}/inquiries`,
+   // ✅ DELETE INQUIRY
+  DELETE_INQUIRY: (id) => `${FRANCHISE_BASE_URL}/inquiry/${id}`,
 
 
 
@@ -29,5 +31,22 @@ export const FRANCHISE_API_ENDPOINTS = {
   UPDATE_DEAL: `${FRANCHISE_BASE_URL}/deal/update`,
   FINALIZE_DEAL: `${FRANCHISE_BASE_URL}/deal/finalize`,
 
+
+    // ✅ LISTING VERIFICATION APIs
+  GET_FRANCHISE_CAR_LISTINGS: `${FRANCHISE_BASE_URL}/franchise-car-listings`,
+
+  REJECT_CAR_LISTING: (carId) =>`${FRANCHISE_BASE_URL}/listings/reject/${carId}`,
+
+
+
+  // ================= PROFILE APIs =================
+
+GET_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
+
+UPDATE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
+
+CHANGE_PASSWORD: `${FRANCHISE_BASE_URL}/profile/password`,
+
+DELETE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
 }; 
 

@@ -22,6 +22,13 @@ const Navbar = ({ role }: NavbarProps) => {
   const navigate = useNavigate();
   const email = localStorage.getItem("userEmail") || "user@example.com";
 
+const handleProfile = () => {
+  navigate(`/${role}/profile`);
+};
+
+
+
+
   const handleLogout = () => {
     localStorage.removeItem("userRole");
     localStorage.removeItem("userEmail");
@@ -80,10 +87,21 @@ const Navbar = ({ role }: NavbarProps) => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="transition-all duration-300 hover:bg-primary/10 cursor-pointer">
+            {/* <DropdownMenuItem className="transition-all duration-300 hover:bg-primary/10 cursor-pointer">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
+            <DropdownMenuItem
+  onClick={handleProfile}
+  className="transition-all duration-300 hover:bg-primary/10 cursor-pointer"
+>
+  <User className="mr-2 h-4 w-4" />
+  <span>Profile</span>
+</DropdownMenuItem>
+
+
+
+
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive transition-all duration-300 hover:bg-destructive/10 cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />

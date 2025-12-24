@@ -158,3 +158,133 @@ export const finalizeDeal = async (payload) => {
 
   return response.data;
 };
+
+
+
+// ✅ DELETE FRANCHISE INQUIRY
+export const deleteFranchiseInquiry = async (id) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.delete(
+    FRANCHISE_API_ENDPOINTS.DELETE_INQUIRY(id),
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+
+// 9. GET FRANCHISE CAR LISTINGS (For Verification)
+export const getFranchiseCarListings = async (status) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_FRANCHISE_CAR_LISTINGS,
+    {
+      params: { status }, // ?status=pending_verification
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data; // { success, data }
+};
+
+
+// 10. REJECT CAR LISTING
+export const rejectCarListing = async (carId, reason) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.REJECT_CAR_LISTING(carId),
+    { reason },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+
+
+// 1️⃣ GET USER PROFILE
+export const getUserProfile = async () => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_PROFILE,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// 2️⃣ UPDATE PROFILE (with image)
+export const updateUserProfile = async (formData) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.UPDATE_PROFILE,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// 3️⃣ CHANGE PASSWORD
+export const changeUserPassword = async (payload) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.CHANGE_PASSWORD,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// 4️⃣ DELETE PROFILE
+export const deleteUserProfile = async () => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.delete(
+    FRANCHISE_API_ENDPOINTS.DELETE_PROFILE,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

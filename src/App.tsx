@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import DashboardLayout from "./components/layouts/DashboardLayout";
+import Profile from "./components/common/Profile";
+
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -51,6 +53,7 @@ const App = () => (
           {/* Admin Routes */}
           <Route path="/admin" element={<DashboardLayout role="admin" />}>
             <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="profile" element={<Profile />} />   {/* ✅ ADD THIS */}
             <Route path="users" element={<UserManagement />} />
             <Route path="franchises" element={<FranchiseManagement />} />
             <Route path="dealers" element={<DealerManagement />} />
@@ -65,6 +68,7 @@ const App = () => (
           {/* Franchise Routes */}
           <Route path="/franchise" element={<DashboardLayout role="franchise" />}>
             <Route path="dashboard" element={<FranchiseDashboard />} />
+              <Route path="profile" element={<Profile />} />   {/* ✅ ADD THIS */}
             <Route path="listings" element={<ListingVerification />} />
             <Route path="leads" element={<InquiryLeads />} />
             <Route path="deals" element={<DealTracking />} />
@@ -76,13 +80,14 @@ const App = () => (
           {/* Dealer Routes */}
           {/* <Route path="/dealer" element={<DashboardLayout role="dealer" />}>
             <Route path="dashboard" element={<DealerDashboard />} />
-            <Route path="marketplace" element={<LeadMarketplace />} />
+              <Route path="profile" element={<Profile />} />   {/* ✅ ADD THIS */}
+            {/* <Route path="marketplace" element={<LeadMarketplace />} />
             <Route path="purchased-leads" element={<PurchasedLeads />} />
             <Route path="my-listings" element={<DealerListings />} />
             <Route path="wallet" element={<DealerWallet />} />
             <Route path="analytics" element={<DealerAnalytics />} />
             <Route path="profile" element={<DealerProfile />} />
-          </Route> */}
+          </Route> */} 
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
