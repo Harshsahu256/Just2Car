@@ -3,7 +3,7 @@
 export const FRANCHISE_BASE_URL = "http://localhost:8002/api/v1/franchise";
 
 export const FRANCHISE_API_ENDPOINTS = {
-
+  DASHBOARD_REPORTS: `${FRANCHISE_BASE_URL}/dashboard`,
 
         // 1. POST request to create a new car
     CREATE_SELF_LISTING: `${FRANCHISE_BASE_URL}/self-car-list`,
@@ -48,5 +48,7 @@ UPDATE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
 CHANGE_PASSWORD: `${FRANCHISE_BASE_URL}/profile/password`,
 
 DELETE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
+
+  GET_DEAL_DETAILS: (id) => `${FRANCHISE_BASE_URL}/deal/${id}`, // Ye line add karein
 }; 
 

@@ -288,3 +288,38 @@ export const deleteUserProfile = async () => {
 
   return response.data;
 };
+
+// src/services/franchiseService.js
+export const getFranchiseDashboardReports = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No auth token found");
+ 
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.DASHBOARD_REPORTS,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+ 
+  return response.data.stats;
+};
+ 
+
+// 9. GET DEAL DETAILS (New)
+export const getDealDetails = async (dealId) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+ 
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_DEAL_DETAILS(dealId),
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+ 
+  return response.data;
+};
