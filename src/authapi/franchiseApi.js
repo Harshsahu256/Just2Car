@@ -1,6 +1,7 @@
 // src/authapi/franchiseApi.js
 // export const FRANCHISE_BASE_URL = "https://seediest-brynlee-nondefensive.ngrok-free.dev/api/v1/franchise";
-export const FRANCHISE_BASE_URL = "http://localhost:8002/api/v1/franchise";
+export const FRANCHISE_BASE_URL = "http://localhost:3010/api/v1/franchise";
+// export const FRANCHISE_BASE_URL = "https://justapp.aasmo.in/api/v1/franchise";
 
 export const FRANCHISE_API_ENDPOINTS = {
   DASHBOARD_REPORTS: `${FRANCHISE_BASE_URL}/dashboard`,
@@ -35,6 +36,10 @@ export const FRANCHISE_API_ENDPOINTS = {
     // ✅ LISTING VERIFICATION APIs
   GET_FRANCHISE_CAR_LISTINGS: `${FRANCHISE_BASE_URL}/franchise-car-listings`,
 
+  APPROVE_CAR_LISTING: (carId) => `${FRANCHISE_BASE_URL}/listings/approve/${carId}`,
+
+  EDIT_CAR_LISTING: (carId) => `${FRANCHISE_BASE_URL}/listings/edit/${carId}`,
+
   REJECT_CAR_LISTING: (carId) =>`${FRANCHISE_BASE_URL}/listings/reject/${carId}`,
 
 
@@ -50,5 +55,20 @@ CHANGE_PASSWORD: `${FRANCHISE_BASE_URL}/profile/password`,
 DELETE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
 
   GET_DEAL_DETAILS: (id) => `${FRANCHISE_BASE_URL}/deal/${id}`, // Ye line add karein
+
+ GET_ANALYTICS: (range) => `${FRANCHISE_BASE_URL}/franchise-analytics?range=${range}`,
+
+  GET_LISTING_PACKAGES: `${FRANCHISE_BASE_URL}/getAllCarListingPackages`,
+  CREATE_PACKAGE_ORDER: `${FRANCHISE_BASE_URL}/payment/packageorder`,
+  GET_CAR_LISTING_STATS: `${FRANCHISE_BASE_URL}/listing-stats`,
+
+// 👇 NEW: DEAL TRACKING (Kanban/List & Status Update)
+  GET_ALL_DEALS: `${FRANCHISE_BASE_URL}/deals`, 
+  UPDATE_DEAL_STATUS: (dealId) => `${FRANCHISE_BASE_URL}/deals/${dealId}/status`,
+
+ // Territory Management
+  REQUEST_TERRITORY_UPDATE: `${FRANCHISE_BASE_URL}/territory/request`,
+  GET_TERRITORY_HISTORY: `${FRANCHISE_BASE_URL}/territory/history`,
+
 }; 
 

@@ -1331,8 +1331,8 @@ const FranchiseDashboard = () => {
       // Format Recent Listings
       const formattedListings = rawListings.slice(0, 10).map((item: any) => ({
         id: item._id,
-        car: item.title || `${item.brand} ${item.model}` || "Vehicle Listing",
-        price: item.price ? formatCurrency(item.price) : "₹ --",
+        car: item.title || `${item.make} ${item.model} ${item.variant}` || "Vehicle Listing",
+        price: item.expectedPrice ? formatCurrency(item.expectedPrice) : "₹ --",
         status: item.status || "pending",
         date: timeAgo(item.createdAt)
       }));
@@ -1446,3 +1446,4 @@ const FranchiseDashboard = () => {
 };
 
 export default FranchiseDashboard;
+

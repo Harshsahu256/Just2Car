@@ -183,7 +183,7 @@ export const InquiryDetailsDialog = ({
           >
             Close
           </Button>
-          <Button
+          {/* <Button
             className="bg-[#0052cc] hover:bg-[#0041a3] rounded-lg h-10 px-6 font-bold flex items-center gap-2 shadow-sm text-white"
             onClick={() => {
               onOpenChange(false);
@@ -191,7 +191,7 @@ export const InquiryDetailsDialog = ({
             }}
           >
             <MessageCircle className="w-4 h-4" /> Negotiate Deal
-          </Button>
+          </Button> */}
         </div>
       </DialogContent>
     </Dialog>

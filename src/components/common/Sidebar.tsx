@@ -56,7 +56,8 @@ const franchiseMenuItems: MenuItem[] = [
   { title: "Deal Tracking", url: "/franchise/deals", icon: ClipboardList },
   { title: "My Listings", url: "/franchise/my-listings", icon: FileText },
   { title: "Reports", url: "/franchise/reports", icon: TrendingUp },
-  { title: "Account", url: "/franchise/account", icon: Settings },
+  // { title: "Account", url: "/franchise/account", icon: Settings },
+    { title: "Listing Packages", url: "/franchise/listing-packages", icon: Package },
 ];
 
 const dealerMenuItems: MenuItem[] = [

@@ -198,6 +198,35 @@ export const getFranchiseCarListings = async (status) => {
 };
 
 
+export const approveCarListing = async (carId, comment) => {
+  const token = getAuthToken();
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.APPROVE_CAR_LISTING(carId),
+    { comment }, // ✅ send comment
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+
+  return response.data;
+};
+
+
+
+export const editFranchiseListing = async (carId, data) => {
+  const token = getAuthToken();
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.EDIT_CAR_LISTING(carId),
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+  return response.data;
+};
+
+
 // 10. REJECT CAR LISTING
 export const rejectCarListing = async (carId, reason) => {
   const token = getAuthToken();
@@ -322,4 +351,118 @@ export const getDealDetails = async (dealId) => {
   );
  
   return response.data;
+};
+
+
+export const getFranchiseAnalytics = async (range) => {
+    const token = getAuthToken();
+    if (!token) throw new Error("No auth token found.");
+
+    const response = await axios.get(
+        FRANCHISE_API_ENDPOINTS.GET_ANALYTICS(range),
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    return response.data; // { success, monthlyData, leadConversionData, kpiData }
+};
+
+
+export const getListingPackages = async () => {
+    const token = getAuthToken();
+    const response = await axios.get(
+        FRANCHISE_API_ENDPOINTS.GET_LISTING_PACKAGES,
+        {
+            headers: { Authorization: `Bearer ${token}` },
+        }
+    );
+    return response.data; // { success: true, data: [...] }
+};
+ 
+ 
+ 
+ 
+export const createListingPackageOrder = async (packageId) => {
+  const token = getAuthToken();
+  const response = await axios.post(
+    FRANCHISE_API_ENDPOINTS.CREATE_PACKAGE_ORDER,
+    { packageId },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+ 
+export const getFranchiseListingStats = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(
+     FRANCHISE_API_ENDPOINTS.GET_CAR_LISTING_STATS,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+
+export const getFranchiseDeals = async () => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_ALL_DEALS,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data; // { success: true, data: [...] }
+};
+
+// 11. UPDATE DEAL STATUS (Sold / Cancelled / Negotiating)
+export const updateDealStatus = async (dealId, payload) => {
+  // Payload example: { status: "sold", finalPrice: 500000, note: "Done" }
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.UPDATE_DEAL_STATUS(dealId),
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+
+
+// Request New Territory
+export const submitTerritoryRequest = async (payload) => {
+  // Payload: { requestedPincodes: ["123", "456"], reason: "Growth" }
+  const token = getAuthToken();
+  const response = await axios.post(
+    FRANCHISE_API_ENDPOINTS.REQUEST_TERRITORY_UPDATE,
+    payload,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+// Get Request History
+export const getTerritoryHistory = async () => {
+  const token = getAuthToken();
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_TERRITORY_HISTORY,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data.data;
 };

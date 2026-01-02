@@ -290,7 +290,7 @@ const InquiryList = ({
                   <Button variant="outline" size="sm" className="flex-1 gap-2" onClick={() => onView(inquiry)}>
                     <Eye className="h-4 w-4" /> View
                   </Button>
-                  <Button 
+                  {/* <Button 
                     size="sm" 
                     className="flex-1 gap-2" 
                     onClick={() => onNegotiate(inquiry)}
@@ -298,7 +298,7 @@ const InquiryList = ({
                   >
                     {isNegotiating ? <Loader2 className="h-3 w-3 animate-spin" /> : <MessageCircle className="h-3 w-3" />}
                     Negotiate
-                  </Button>
+                  </Button> */}
                   <Button variant="outline" size="sm" className="text-destructive hover:bg-destructive/10 border-destructive/20" onClick={() => onDelete(inquiry)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>

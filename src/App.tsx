@@ -38,6 +38,7 @@ import DealerListings from "./pages/dealer/MyListings";
 import DealerWallet from "./pages/dealer/Wallet";
 import DealerAnalytics from "./pages/dealer/Analytics";
 import DealerProfile from "./pages/dealer/Profile";
+import ListingPackages from "./pages/franchise/ListingPackages";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,8 @@ const App = () => (
             <Route path="my-listings" element={<FranchiseMyListings />} />
             <Route path="reports" element={<FranchiseReports />} />
             <Route path="account" element={<FranchiseAccount />} />
+             <Route path="listing-packages" element={<ListingPackages/>} />
+ 
           </Route>
 
           {/* Dealer Routes */}
