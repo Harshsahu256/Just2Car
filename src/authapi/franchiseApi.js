@@ -22,10 +22,18 @@ export const FRANCHISE_API_ENDPOINTS = {
 
      // ✅ NEW: GET INQUIRIES
   GET_INQUIRIES: `${FRANCHISE_BASE_URL}/inquiries`,
+  
+  // ✅ UPDATE INQUIRY STATUS
+UPDATE_INQUIRY_STATUS: (inquiryId) =>
+  `${FRANCHISE_BASE_URL}/inquiries/${inquiryId}/status`,
+
+
    // ✅ DELETE INQUIRY
   DELETE_INQUIRY: (id) => `${FRANCHISE_BASE_URL}/inquiry/${id}`,
 
-
+// ✅ CAR WISE INQUIRIES
+GET_CAR_INQUIRIES: (carId) =>
+  `${FRANCHISE_BASE_URL}/car-inquiries/${carId}`,
 
     // ✅ DEAL APIs
   START_DEAL: `${FRANCHISE_BASE_URL}/deal/create`,
@@ -36,7 +44,7 @@ export const FRANCHISE_API_ENDPOINTS = {
     // ✅ LISTING VERIFICATION APIs
   GET_FRANCHISE_CAR_LISTINGS: `${FRANCHISE_BASE_URL}/franchise-car-listings`,
 
-  APPROVE_CAR_LISTING: (carId) => `${FRANCHISE_BASE_URL}/listings/approve/${carId}`,
+
 
   EDIT_CAR_LISTING: (carId) => `${FRANCHISE_BASE_URL}/listings/edit/${carId}`,
 
@@ -69,6 +77,28 @@ DELETE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
  // Territory Management
   REQUEST_TERRITORY_UPDATE: `${FRANCHISE_BASE_URL}/territory/request`,
   GET_TERRITORY_HISTORY: `${FRANCHISE_BASE_URL}/territory/history`,
+
+
+  // ================= INSPECTION APIs =================
+
+  GET_INSPECTORS: `${FRANCHISE_BASE_URL}/inspectors/all`,
+
+   CREATE_INSPECTORS:`${FRANCHISE_BASE_URL}/inspectors/create`,
+
+  UPDATE_INSPECTOR: (id) => `${FRANCHISE_BASE_URL}/inspectors/${id}`, // Changed 'inspector' to 'inspectors'
+  DELETE_INSPECTOR: (id) => `${FRANCHISE_BASE_URL}/inspectors/${id}`, // Changed 'inspector' to 'inspectors'
+
+SCHEDULE_INSPECTION: `${FRANCHISE_BASE_URL}/inspection/schedule`,
+
+ASSIGN_INSPECTOR: `${FRANCHISE_BASE_URL}/inspection/assign`,
+
+  GET_COMPLETED_INSPECTION_BY_CAR:`${FRANCHISE_BASE_URL}/inspection/completed`, // carId later
+ 
+
+APPROVE_CAR_LISTING:`${FRANCHISE_BASE_URL}/inspection/make-live`,
+
+
+
 
 }; 
 

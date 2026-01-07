@@ -547,40 +547,350 @@
 // };
 
 // export default ListingPackages;
-import { useState, useEffect, useMemo } from "react";
+
+
+
+// import { useState, useEffect, useMemo } from "react";
+// import { motion } from "framer-motion";
+// import { Check, Zap, Loader2, Package, Car, ShoppingCart } from "lucide-react";
+// import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import { useToast } from "@/hooks/use-toast";
+
+// // Real API Services Import
+// import { 
+//   getListingPackages, 
+//   createListingPackageOrder, 
+//   getFranchiseListingStats 
+// } from "@/services/franchiseService";
+
+// // Types/Interfaces
+// interface ListingStats {
+//   totalLimit: number;
+//   usedListings: number;
+//   remainingListings: number;
+// }
+
+// interface RazorpayResponse {
+//   razorpay_payment_id: string;
+//   razorpay_order_id: string;
+//   razorpay_signature: string;
+// }
+
+// // Razorpay script loader utility
+// const loadRazorpayScript = () => {
+//   return new Promise((resolve) => {
+//     if ((window as any).Razorpay) {
+//       resolve(true);
+//       return;
+//     }
+//     const script = document.createElement("script");
+//     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+//     script.onload = () => resolve(true);
+//     script.onerror = () => resolve(false);
+//     document.body.appendChild(script);
+//   });
+// };
+
+// const ListingPackages = ({ userProfile }: any) => {
+//   const [packages, setPackages] = useState<any[]>([]);
+//   const [stats, setStats] = useState<ListingStats | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [buyingId, setBuyingId] = useState<string | null>(null);
+//   const { toast } = useToast();
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   const fetchData = async () => {
+//     try {
+//       setLoading(true);
+//       const [pkgRes, statsRes] = await Promise.all([
+//         getListingPackages(),
+//         getFranchiseListingStats(),
+//       ]);
+
+//       if (pkgRes.success) setPackages(pkgRes.data);
+//       if (statsRes.success) setStats(statsRes.data);
+//     } catch (error) {
+//       toast({
+//         title: "Error",
+//         description: "Failed to fetch data. Please try again.",
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handlePurchase = async (pkg: any) => {
+//     setBuyingId(pkg._id);
+
+//     try {
+//       // 1. Script load karo
+//       const isLoaded = await loadRazorpayScript();
+//       if (!isLoaded) {
+//         toast({ 
+//           title: "Error", 
+//           description: "Razorpay SDK failed to load", 
+//           variant: "destructive" 
+//         });
+//         return;
+//       }
+
+//       // 2. Order Create Karo
+//       const res = await createListingPackageOrder(pkg._id);
+
+//       if (res.success) {
+//         const options = {
+//           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+//           amount: res.order.amount,
+//           currency: "INR",
+//           name: "Car Listing Package",
+//           description: `Purchase ${pkg.name}`,
+//           order_id: res.order.id,
+//           handler: async (response: RazorpayResponse) => {
+//             toast({ 
+//               title: "Payment Successful!", 
+//               description: `Your ${pkg.name} has been activated.` 
+//             });
+//             // Refresh taaki stats update ho jayein
+//             setTimeout(() => window.location.reload(), 2000);
+//           },
+//           prefill: {
+//             name: userProfile?.fullName || userProfile?.name,
+//             email: userProfile?.email,
+//           },
+//           theme: { 
+//             color: "#6366f1" 
+//           },
+//         };
+
+//         const rzp = new (window as any).Razorpay(options);
+//         rzp.open();
+//       }
+//     } catch (error: any) {
+//       console.error("Payment Error:", error);
+//       toast({
+//         title: "Order Failed",
+//         description: error.response?.data?.message || "Failed to create order",
+//         variant: "destructive"
+//       });
+//     } finally {
+//       setBuyingId(null);
+//     }
+//   };
+
+//   const formatCurrency = (amount: number) => {
+//     return new Intl.NumberFormat("en-IN", {
+//       style: "currency",
+//       currency: "INR",
+//       maximumFractionDigits: 0,
+//     }).format(amount);
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-background flex items-center justify-center">
+//         <div className="flex flex-col items-center gap-4">
+//           <Loader2 className="h-12 w-12 animate-spin text-primary" />
+//           <p className="text-muted-foreground">Loading packages...</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-background">
+//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+//         {/* Header Section */}
+//         <motion.div
+//           initial={{ opacity: 0, y: -20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.5 }}
+//           className="text-center mb-12"
+//         >
+//           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+//             Listing Packages
+//           </h1>
+//           <p className="text-muted-foreground text-lg">
+//             Choose the perfect package to list your cars
+//           </p>
+//         </motion.div>
+
+//         {/* Listing Stats Summary */}
+//         {stats && (
+//           <motion.div
+//             initial={{ opacity: 0, scale: 0.95 }}
+//             animate={{ opacity: 1, scale: 1 }}
+//             transition={{ duration: 0.5, delay: 0.1 }}
+//             className="mb-10"
+//           >
+//             <Card className="bg-gradient-to-r from-primary/10 via-primary/5 to-background border-primary/20">
+//               <CardContent className="py-6">
+//                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+//                   <div className="flex items-center gap-4">
+//                     <div className="p-3 rounded-full bg-primary/20">
+//                       <Car className="h-8 w-8 text-primary" />
+//                     </div>
+//                     <div>
+//                       <h3 className="text-lg font-semibold text-foreground">Your Listing Summary</h3>
+//                       <p className="text-sm text-muted-foreground">Current credit utilization</p>
+//                     </div>
+//                   </div>
+//                   <div className="flex flex-wrap items-center gap-8">
+//                     <div className="text-center">
+//                       <p className="text-3xl font-bold text-foreground">{stats.totalLimit}</p>
+//                       <p className="text-sm text-muted-foreground">Total Limit</p>
+//                     </div>
+//                     <div className="h-12 w-px bg-border hidden md:block" />
+//                     <div className="text-center">
+//                       <p className="text-3xl font-bold text-orange-500">{stats.usedListings}</p>
+//                       <p className="text-sm text-muted-foreground">Used</p>
+//                     </div>
+//                     <div className="h-12 w-px bg-border hidden md:block" />
+//                     <div className="text-center">
+//                       <p className="text-3xl font-bold text-emerald-500">{stats.remainingListings}</p>
+//                       <p className="text-sm text-muted-foreground">Remaining</p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </CardContent>
+//             </Card>
+//           </motion.div>
+//         )}
+
+//         {/* Packages Grid */}
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+//           {packages.map((pkg, index) => (
+//             <motion.div
+//               key={pkg._id}
+//               initial={{ opacity: 0, y: 20 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.5, delay: index * 0.1 }}
+//             >
+//               <Card
+//                 className={`relative h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+//                   pkg.isPopular // Backend se agar isPopular flag aata hai
+//                     ? "border-primary shadow-lg ring-2 ring-primary/20"
+//                     : "border-border hover:border-primary/50"
+//                 }`}
+//               >
+//                 {pkg.isPopular && (
+//                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+//                     <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+//                       <Zap className="h-3 w-3" />
+//                       Most Popular
+//                     </span>
+//                   </div>
+//                 )}
+
+//                 <CardHeader className="text-center pb-2">
+//                   <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit">
+//                     <Package className="h-8 w-8 text-primary" />
+//                   </div>
+//                   <CardTitle className="text-xl">{pkg.name}</CardTitle>
+//                   <CardDescription>
+//                     <span className="text-3xl font-bold text-foreground">
+//                       {formatCurrency(pkg.price)}
+//                     </span>
+//                   </CardDescription>
+//                 </CardHeader>
+
+//                 <CardContent className="flex-1">
+//                   <div className="text-center mb-6 p-3 rounded-lg bg-muted/50">
+//                     <p className="text-2xl font-bold text-primary">{pkg.carListingLimit}</p>
+//                     <p className="text-sm text-muted-foreground">Car Listings</p>
+//                   </div>
+
+//                   <ul className="space-y-3">
+//                     {/* Fixed features for all packages as seen in the prompt */}
+//                     <li className="flex items-center gap-2 text-sm">
+//                       <div className="p-1 rounded-full bg-emerald-500/10">
+//                         <Check className="h-3 w-3 text-emerald-500" />
+//                       </div>
+//                       <span className="text-muted-foreground">Instant Activation</span>
+//                     </li>
+//                     <li className="flex items-center gap-2 text-sm">
+//                       <div className="p-1 rounded-full bg-emerald-500/10">
+//                         <Check className="h-3 w-3 text-emerald-500" />
+//                       </div>
+//                       <span className="text-muted-foreground">Life-time Validity</span>
+//                     </li>
+//                     <li className="flex items-center gap-2 text-sm">
+//                       <div className="p-1 rounded-full bg-emerald-500/10">
+//                         <Check className="h-3 w-3 text-emerald-500" />
+//                       </div>
+//                       <span className="text-muted-foreground">Priority Support</span>
+//                     </li>
+//                   </ul>
+//                 </CardContent>
+
+//                 <CardFooter>
+//                   <Button
+//                     className="w-full"
+//                     variant={pkg.isPopular ? "default" : "outline"}
+//                     onClick={() => handlePurchase(pkg)}
+//                     disabled={buyingId === pkg._id}
+//                   >
+//                     {buyingId === pkg._id ? (
+//                       <>
+//                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       <>
+//                         <ShoppingCart className="mr-2 h-4 w-4" />
+//                         Buy Now
+//                       </>
+//                     )}
+//                   </Button>
+//                 </CardFooter>
+//               </Card>
+//             </motion.div>
+//           ))}
+//         </div>
+
+//         {/* Footer Note */}
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ duration: 0.5, delay: 0.6 }}
+//           className="mt-12 text-center"
+//         >
+//           <p className="text-sm text-muted-foreground">
+//             All packages include instant activation and lifetime validity.
+//             <br />
+//             Need a custom package?{" "}
+//             <a href="#" className="text-primary hover:underline">
+//               Contact us
+//             </a>
+//           </p>
+//         </motion.div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ListingPackages;
+
+
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Check, Zap, Loader2, Package, Car, ShoppingCart } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PackageHeader } from "../franchise/pages/PackageHeader";
+import { ListingSummary } from "../franchise/pages/ListingSummary";
+import { PackageCard } from "../franchise/pages/PackageCard";
 
-// Real API Services Import
-import { 
-  getListingPackages, 
-  createListingPackageOrder, 
-  getFranchiseListingStats 
-} from "@/services/franchiseService";
+// Services
+import { getListingPackages, createListingPackageOrder, getFranchiseListingStats } from "@/services/franchiseService";
 
-// Types/Interfaces
-interface ListingStats {
-  totalLimit: number;
-  usedListings: number;
-  remainingListings: number;
-}
-
-interface RazorpayResponse {
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
-  razorpay_signature: string;
-}
-
-// Razorpay script loader utility
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
-    if ((window as any).Razorpay) {
-      resolve(true);
-      return;
-    }
+    if ((window as any).Razorpay) { resolve(true); return; }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onload = () => resolve(true);
@@ -591,54 +901,31 @@ const loadRazorpayScript = () => {
 
 const ListingPackages = ({ userProfile }: any) => {
   const [packages, setPackages] = useState<any[]>([]);
-  const [stats, setStats] = useState<ListingStats | null>(null);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [pkgRes, statsRes] = await Promise.all([
-        getListingPackages(),
-        getFranchiseListingStats(),
-      ]);
-
+      const [pkgRes, statsRes] = await Promise.all([getListingPackages(), getFranchiseListingStats()]);
       if (pkgRes.success) setPackages(pkgRes.data);
       if (statsRes.success) setStats(statsRes.data);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch data. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+      toast({ title: "Error", description: "Failed to fetch data", variant: "destructive" });
+    } finally { setLoading(false); }
   };
 
   const handlePurchase = async (pkg: any) => {
     setBuyingId(pkg._id);
-
     try {
-      // 1. Script load karo
       const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        toast({ 
-          title: "Error", 
-          description: "Razorpay SDK failed to load", 
-          variant: "destructive" 
-        });
-        return;
-      }
+      if (!isLoaded) return toast({ title: "Error", description: "Razorpay SDK failed", variant: "destructive" });
 
-      // 2. Order Create Karo
       const res = await createListingPackageOrder(pkg._id);
-
       if (res.success) {
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -647,225 +934,51 @@ const ListingPackages = ({ userProfile }: any) => {
           name: "Car Listing Package",
           description: `Purchase ${pkg.name}`,
           order_id: res.order.id,
-          handler: async (response: RazorpayResponse) => {
-            toast({ 
-              title: "Payment Successful!", 
-              description: `Your ${pkg.name} has been activated.` 
-            });
-            // Refresh taaki stats update ho jayein
+          handler: () => {
+            toast({ title: "Payment Successful!", description: `${pkg.name} activated.` });
             setTimeout(() => window.location.reload(), 2000);
           },
-          prefill: {
-            name: userProfile?.fullName || userProfile?.name,
-            email: userProfile?.email,
-          },
-          theme: { 
-            color: "#6366f1" 
-          },
+          prefill: { name: userProfile?.fullName, email: userProfile?.email },
+          theme: { color: "#6366f1" },
         };
-
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
+        new (window as any).Razorpay(options).open();
       }
     } catch (error: any) {
-      console.error("Payment Error:", error);
-      toast({
-        title: "Order Failed",
-        description: error.response?.data?.message || "Failed to create order",
-        variant: "destructive"
-      });
-    } finally {
-      setBuyingId(null);
-    }
+      toast({ title: "Order Failed", description: error.response?.data?.message || "Failed", variant: "destructive" });
+    } finally { setBuyingId(null); }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
+  const formatCurrency = (amount: number) => 
+    new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-muted-foreground">Loading packages...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader2 className="h-12 w-12 animate-spin text-primary" />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <PackageHeader />
+        {stats && <ListingSummary stats={stats} />}
         
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Listing Packages
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Choose the perfect package to list your cars
-          </p>
-        </motion.div>
-
-        {/* Listing Stats Summary */}
-        {stats && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-10"
-          >
-            <Card className="bg-gradient-to-r from-primary/10 via-primary/5 to-background border-primary/20">
-              <CardContent className="py-6">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-full bg-primary/20">
-                      <Car className="h-8 w-8 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">Your Listing Summary</h3>
-                      <p className="text-sm text-muted-foreground">Current credit utilization</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-8">
-                    <div className="text-center">
-                      <p className="text-3xl font-bold text-foreground">{stats.totalLimit}</p>
-                      <p className="text-sm text-muted-foreground">Total Limit</p>
-                    </div>
-                    <div className="h-12 w-px bg-border hidden md:block" />
-                    <div className="text-center">
-                      <p className="text-3xl font-bold text-orange-500">{stats.usedListings}</p>
-                      <p className="text-sm text-muted-foreground">Used</p>
-                    </div>
-                    <div className="h-12 w-px bg-border hidden md:block" />
-                    <div className="text-center">
-                      <p className="text-3xl font-bold text-emerald-500">{stats.remainingListings}</p>
-                      <p className="text-sm text-muted-foreground">Remaining</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {packages.map((pkg, index) => (
-            <motion.div
-              key={pkg._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card
-                className={`relative h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
-                  pkg.isPopular // Backend se agar isPopular flag aata hai
-                    ? "border-primary shadow-lg ring-2 ring-primary/20"
-                    : "border-border hover:border-primary/50"
-                }`}
-              >
-                {pkg.isPopular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                      <Zap className="h-3 w-3" />
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-
-                <CardHeader className="text-center pb-2">
-                  <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit">
-                    <Package className="h-8 w-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{pkg.name}</CardTitle>
-                  <CardDescription>
-                    <span className="text-3xl font-bold text-foreground">
-                      {formatCurrency(pkg.price)}
-                    </span>
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent className="flex-1">
-                  <div className="text-center mb-6 p-3 rounded-lg bg-muted/50">
-                    <p className="text-2xl font-bold text-primary">{pkg.carListingLimit}</p>
-                    <p className="text-sm text-muted-foreground">Car Listings</p>
-                  </div>
-
-                  <ul className="space-y-3">
-                    {/* Fixed features for all packages as seen in the prompt */}
-                    <li className="flex items-center gap-2 text-sm">
-                      <div className="p-1 rounded-full bg-emerald-500/10">
-                        <Check className="h-3 w-3 text-emerald-500" />
-                      </div>
-                      <span className="text-muted-foreground">Instant Activation</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <div className="p-1 rounded-full bg-emerald-500/10">
-                        <Check className="h-3 w-3 text-emerald-500" />
-                      </div>
-                      <span className="text-muted-foreground">Life-time Validity</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <div className="p-1 rounded-full bg-emerald-500/10">
-                        <Check className="h-3 w-3 text-emerald-500" />
-                      </div>
-                      <span className="text-muted-foreground">Priority Support</span>
-                    </li>
-                  </ul>
-                </CardContent>
-
-                <CardFooter>
-                  <Button
-                    className="w-full"
-                    variant={pkg.isPopular ? "default" : "outline"}
-                    onClick={() => handlePurchase(pkg)}
-                    disabled={buyingId === pkg._id}
-                  >
-                    {buyingId === pkg._id ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Buy Now
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
+            <PackageCard 
+              key={pkg._id} 
+              pkg={pkg} 
+              index={index} 
+              buyingId={buyingId} 
+              onPurchase={handlePurchase} 
+              formatCurrency={formatCurrency} 
+            />
           ))}
         </div>
 
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-12 text-center"
-        >
-          <p className="text-sm text-muted-foreground">
-            All packages include instant activation and lifetime validity.
-            <br />
-            Need a custom package?{" "}
-            <a href="#" className="text-primary hover:underline">
-              Contact us
-            </a>
-          </p>
-        </motion.div>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-12 text-center text-sm text-muted-foreground">
+          All packages include instant activation and lifetime validity.
+        </motion.p>
       </div>
     </div>
   );

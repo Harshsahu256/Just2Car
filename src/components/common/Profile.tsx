@@ -1667,6 +1667,7 @@
 
 // export default Profile;
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { 
@@ -2234,7 +2235,7 @@ const Profile: React.FC = () => {
           <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="text-lg font-semibold text-destructive mb-1 flex items-center gap-2"><AlertTriangle className="w-5 h-5" /> Danger Zone</h3>
-              <p className="text-muted-foreground text-sm">Once you delete your account, there is no going back.</p>
+              <p className="text-muted-foreground text-sm">Delete your account,</p>
             </div>
             <button onClick={() => setShowDeleteModal(true)} className="flex items-center gap-2 px-5 py-2.5 bg-destructive text-destructive-foreground rounded-lg font-medium hover:opacity-90 whitespace-nowrap text-sm">
               <Trash2 className="w-4 h-4" /> Delete Account

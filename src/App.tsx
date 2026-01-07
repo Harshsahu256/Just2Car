@@ -29,6 +29,9 @@ import DealTracking from "./pages/franchise/Deals";
 import FranchiseMyListings from "./pages/franchise/MyListings";
 import FranchiseReports from "./pages/franchise/Reports";
 import FranchiseAccount from "./pages/franchise/Account";
+import Inspectors from "./pages/franchise/Inspection";
+
+
 
 // Dealer Pages
 import DealerDashboard from "./pages/dealer/Dashboard";
@@ -77,6 +80,9 @@ const App = () => (
             <Route path="reports" element={<FranchiseReports />} />
             <Route path="account" element={<FranchiseAccount />} />
              <Route path="listing-packages" element={<ListingPackages/>} />
+              <Route path="Inspectors" element={<Inspectors/>} />
+             
+             
  
           </Route>
 

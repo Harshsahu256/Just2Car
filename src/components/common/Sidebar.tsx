@@ -58,6 +58,7 @@ const franchiseMenuItems: MenuItem[] = [
   { title: "Reports", url: "/franchise/reports", icon: TrendingUp },
   // { title: "Account", url: "/franchise/account", icon: Settings },
     { title: "Listing Packages", url: "/franchise/listing-packages", icon: Package },
+    { title: "Inspection User", url: "/franchise/Inspectors", icon: Package },
 ];
 
 const dealerMenuItems: MenuItem[] = [

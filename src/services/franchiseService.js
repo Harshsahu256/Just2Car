@@ -99,6 +99,52 @@ export const getFranchiseInquiries = async () => {
     return response.data;
 };
 
+export const updateInquiryStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: user not found"
+      });
+    }
+
+    const inquiry = await Inquiry.findById(id);
+
+    if (!inquiry) {
+      return res.status(404).json({
+        success: false,
+        message: "Inquiry not found"
+      });
+    }
+
+    // 🔐 Ownership check
+    if (inquiry.franchiseId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied"
+      });
+    }
+
+    inquiry.status = status;
+    await inquiry.save();
+
+    res.json({
+      success: true,
+      message: "Inquiry status updated",
+      data: inquiry
+    });
+
+  } catch (error) {
+    console.error("Update Inquiry Status Error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 
 
@@ -197,20 +243,6 @@ export const getFranchiseCarListings = async (status) => {
   return response.data; // { success, data }
 };
 
-
-export const approveCarListing = async (carId, comment) => {
-  const token = getAuthToken();
-
-  const response = await axios.put(
-    FRANCHISE_API_ENDPOINTS.APPROVE_CAR_LISTING(carId),
-    { comment }, // ✅ send comment
-    {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-  );
-
-  return response.data;
-};
 
 
 
@@ -465,4 +497,175 @@ export const getTerritoryHistory = async () => {
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data.data;
+};
+
+
+
+
+
+export const getMyInspectors = async () => {
+  const token = getAuthToken();
+  const res = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_INSPECTORS,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res.data;
+};
+ 
+export const createFranchiseInspector = async (payload) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+ 
+  const res = await axios.post(
+    FRANCHISE_API_ENDPOINTS.CREATE_INSPECTORS,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res.data;
+};
+
+
+export const scheduleInspection = async (payload) => {
+ 
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const res = await axios.post(
+    FRANCHISE_API_ENDPOINTS.SCHEDULE_INSPECTION,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const approveCarListing = async (carId, qualityRating) => {
+  const token = getAuthToken();
+ 
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.APPROVE_CAR_LISTING,
+    {
+      carId,
+      qualityRating
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  );
+ 
+  return response.data;
+};
+ 
+
+export const assignInspector = async (payload) => {
+  
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const res = await axios.put(
+    FRANCHISE_API_ENDPOINTS.ASSIGN_INSPECTOR,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const getCompletedInspectionByCarId = async (carId) => {
+  const token = getAuthToken();
+ 
+  const res = await axios.get(
+    `${FRANCHISE_API_ENDPOINTS.GET_COMPLETED_INSPECTION_BY_CAR}/${carId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+ 
+  return res.data;
+};
+
+
+export const updateFranchiseInspector = async (id, formData) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const res = await axios.put(
+    FRANCHISE_API_ENDPOINTS.UPDATE_INSPECTOR(id),
+    formData, // FormData (name, phone, pincode, profileImage)
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+
+export const deleteFranchiseInspector = async (id) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const res = await axios.delete(
+    FRANCHISE_API_ENDPOINTS.DELETE_INSPECTOR(id),
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+
+export const updateFranchiseInquiryStatus = async (inquiryId, status) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.put(
+    FRANCHISE_API_ENDPOINTS.UPDATE_INQUIRY_STATUS(inquiryId),
+    { status }, // body
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+
+// ✅ GET CAR WISE INQUIRIES
+export const getCarInquiries = async (carId) => {
+  const token = getAuthToken();
+  if (!token) throw new Error("No auth token found.");
+
+  const response = await axios.get(
+    FRANCHISE_API_ENDPOINTS.GET_CAR_INQUIRIES(carId),
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data; // { success, data }
 };
