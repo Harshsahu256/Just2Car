@@ -110,7 +110,7 @@ const ListingVerificationReportDialog: React.FC<ListingVerificationReportDialogP
               </div>
               {reportData.inspectionReport?.minorIssues && (
                 <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-900 shadow-sm">
-                  <p className="text-sm font-bold flex items-center gap-2"><AlertCircle className="w-4 h-4" /> Inspector's Remarks:</p>
+                  <p className="text-sm font-bold flex items-center gap-2"><AlertCircle className="w-4 h-4" /> inspection's Remarks:</p>
                   <p className="text-sm mt-1 italic">"{reportData.inspectionReport.minorIssues}"</p>
                 </div>
               )}

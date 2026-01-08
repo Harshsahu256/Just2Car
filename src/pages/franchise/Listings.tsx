@@ -509,492 +509,6 @@
 
 // export default ListingVerification;
 
- 
-// import { useState, useEffect } from "react";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-// import {
-//   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-// } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import { useToast } from "@/hooks/use-toast";
-// import {
-//   Eye, XCircle, Loader2, UserPlus, CalendarDays,
-//   Check, ClipboardCheck, User, Phone, FileText,
-//   CheckCircle2, AlertCircle, Gauge, CarFront
-// } from "lucide-react";
- 
-// import {
-//   getFranchiseCarListings,
-//   approveCarListing,
-//   scheduleInspection,
-//   assignInspector,
-//   getMyInspectors,
-//   getCompletedInspectionByCarId, // Make sure this is exported in your service
-// } from "@/services/franchiseService";
- 
-// const ListingVerification = () => {
-//   const { toast } = useToast();
- 
-//   const [activeTab, setActiveTab] = useState("pending_verification");
-//   const [listings, setListings] = useState([]);
-//   const [inspectors, setInspectors] = useState([]);
-//   const [loading, setLoading] = useState(true);
- 
-//   // Dialog open/close states
-//   const [selectedCar, setSelectedCar] = useState(null);
-//   const [scheduleOpen, setScheduleOpen] = useState(false);
-//   const [assignOpen, setAssignOpen] = useState(false);
-//   const [approveOpen, setApproveOpen] = useState(false);
-//   const [reportOpen, setReportOpen] = useState(false);
- 
-//   // Data states
-//   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
-//   const [selectedInspectorId, setSelectedInspectorId] = useState("");
-//   const [qualityRating, setQualityRating] = useState(5);
-//   const [reportData, setReportData] = useState(null);
-//   const [reportLoading, setReportLoading] = useState(false);
- 
-//   // ---------------- FETCH DATA ----------------
-//   const fetchData = async () => {
-//     setLoading(true);
-//     try {
-//       const res = await getFranchiseCarListings(activeTab);
-//       setListings(res.data || []);
- 
-//       const ins = await getMyInspectors();
-//       setInspectors(ins.data || []);
-//     } catch (err) {
-//       toast({ title: "Failed to load listings", variant: "destructive" });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
- 
-//   useEffect(() => {
-//     fetchData();
-//   }, [activeTab]);
- 
-//   // ---------------- HELPERS ----------------
-//   const getInspectorName = (id) =>
-//     inspectors.find(i => i._id === id)?.fullName || "Inspector";
- 
-//   const getInspectorPhone = (id) =>
-//     inspectors.find(i => i._id === id)?.phone || "N/A";
- 
-//   const formatDate = (d) =>
-//     new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
- 
-//   // ---------------- ACTIONS ----------------
- 
-//   // Naya Function: Inspection Report Dekhne Ke Liye
-//   const handleViewReport = async (carId) => {
-//     setReportLoading(true);
-//     setReportOpen(true);
-//     try {
-//       const res = await getCompletedInspectionByCarId(carId);
-//       setReportData(res.data);
-//     } catch (error) {
-//       toast({ title: "Report fetch karne mein error aayi", variant: "destructive" });
-//       setReportOpen(false);
-//     } finally {
-//       setReportLoading(false);
-//     }
-//   };
- 
-//   const handleSchedule = async () => {
-//     try {
-//       await scheduleInspection({ carId: selectedCar._id, ...scheduleData });
-//       toast({ title: "Inspection scheduled successfully" });
-//       setScheduleOpen(false);
-//       fetchData();
-//     } catch {
-//       toast({ title: "Schedule failed", variant: "destructive" });
-//     }
-//   };
- 
-//   const handleAssign = async () => {
-//     try {
-//       await assignInspector({ carId: selectedCar._id, inspectorId: selectedInspectorId });
-//       toast({ title: "Inspector assigned successfully" });
-//       setAssignOpen(false);
-//       fetchData();
-//     } catch {
-//       toast({ title: "Assignment failed", variant: "destructive" });
-//     }
-//   };
- 
-//   const handleApprove = async () => {
-//     try {
-//       // selectedCar humne report modal ya direct card se set kiya hoga
-//       await approveCarListing(selectedCar._id, qualityRating);
-//       toast({ title: "Car is now LIVE for buyers! 🚀" });
-//       setApproveOpen(false);
-//       setReportOpen(false);
-//       fetchData();
-//     } catch {
-//       toast({ title: "Approval failed", variant: "destructive" });
-//     }
-//   };
-  
-//   // ---------------- UI ----------------
-//   return (
-//     <div className="p-6 max-w-7xl mx-auto space-y-6">
-//       <div className="flex justify-between items-center">
-//         <h1 className="text-3xl font-bold">Listing & Inspection Management</h1>
-//         <Button onClick={fetchData} variant="outline" size="sm">Refresh</Button>
-//       </div>
- 
-//       <Tabs value={activeTab} onValueChange={setActiveTab}>
-//         <TabsList className="bg-slate-100 p-1">
-//           {["pending_verification", "approved", "live", "rejected", "sold"].map(t => (
-//             <TabsTrigger key={t} value={t} className="capitalize">
-//               {t.replace("_", " ")}
-//             </TabsTrigger>
-//           ))}
-//         </TabsList>
- 
-//         <TabsContent value={activeTab} className="mt-6">
-//           {loading ? (
-//             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//               {[1, 2, 3].map(i => <Skeleton key={i} className="h-80 w-full rounded-xl" />)}
-//             </div>
-//           ) : listings.length === 0 ? (
-//             <div className="text-center py-20 text-muted-foreground border-2 border-dashed rounded-xl">
-//               No cars found in this category.
-//             </div>
-//           ) : (
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//               {listings.map(car => (
-//                 <Card key={car._id} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow">
-//                   <div className="h-48 relative">
-//                     <img src={car.images?.[0] || "https://placehold.co/600x400?text=No+Image"} className="w-full h-full object-cover" alt="car" />
-//                     <Badge className="absolute top-3 right-3 capitalize shadow-md" variant={car.inspectionStatus === 'completed' ? 'success' : 'secondary'}>
-//                       {car.inspectionStatus}
-//                     </Badge>
-//                     <Badge className="absolute top-1  capitalize shadow-md" variant={car.inspectionStatus === 'completed' ? 'success' : 'secondary'}>
-//                       {car.status}
-//                     </Badge>
-//                   </div>
- 
-//                   <CardContent className="p-5 space-y-4">
-//                     <div>
-//                       <h3 className="font-bold text-xl">{car.make} {car.model}</h3>
-//                       <p className="text-sm text-muted-foreground font-medium">
-//                         {car.year} • {car.fuelType} • {car.kmsDriven?.toLocaleString()} km
-//                       </p>
-//                     </div>
- 
-//                     {/* INSPECTION BADGE INFO */}
-//                     {(car.scheduledDate || car.assignedInspector) && (
-//                       <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 space-y-1.5 text-xs text-blue-800">
-//                         <p className="font-bold flex items-center gap-1.5">
-//                           <ClipboardCheck className="w-4 h-4" /> Inspection Details
-//                         </p>
-//                         {car.scheduledDate && (
-//                           <p className="flex items-center gap-1 font-medium">
-//                             <CalendarDays className="w-3.5 h-3.5" /> {formatDate(car.scheduledDate)} at {car.scheduledTime}
-//                           </p>
-//                         )}
-//                         {car.assignedInspector && (
-//                           <div className="flex flex-col gap-1">
-//                             <p className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {getInspectorName(car.assignedInspector)}</p>
-//                             <p className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {getInspectorPhone(car.assignedInspector)}</p>
-//                           </div>
-//                         )}
-//                       </div>
-//                     )}
- 
-//                     {/* STATUS BASED ACTIONS */}
-//                     <div className="space-y-2 pt-2">
-//                       {car.inspectionStatus === "pending" && (
-//                         <Button className="w-full" onClick={() => { setSelectedCar(car); setScheduleOpen(true); }}>
-//                           <CalendarDays className="w-4 h-4 mr-2" /> Schedule Now
-//                         </Button>
-//                       )}
- 
-//                       {car.inspectionStatus === "user_accepted" && (
-//                         <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => { setSelectedCar(car); setAssignOpen(true); }}>
-//                           <UserPlus className="w-4 h-4 mr-2" /> Assign Inspector
-//                         </Button>
-//                       )}
- 
-//                       {car.inspectionStatus === "completed" && car.status !== "live" && (
-//                         <Button className="w-full bg-blue-600 hover:bg-blue-700 font-bold" onClick={() => handleViewReport(car._id)}>
-//                           <FileText className="w-4 h-4 mr-2" /> View Report & Make Live
-//                         </Button>
-//                       )}
- 
-//                       <div className="grid grid-cols-2 gap-2">
-//                         <Button variant="outline" size="sm" className="w-full">
-//                           <Eye className="w-4 h-4 mr-2" /> Details
-//                         </Button>
-//                         <Button variant="ghost" size="sm" className="w-full text-destructive hover:bg-red-50">
-//                           <XCircle className="w-4 h-4 mr-2" /> Reject
-//                         </Button>
-//                       </div>
-//                     </div>
-//                   </CardContent>
-//                 </Card>
-//               ))}
-//             </div>
-//           )}
-//         </TabsContent>
-//       </Tabs>
- 
-//       {/* ------------------- DIALOGS (MODALS) ------------------- */}
- 
-//       {/* 1. VIEW INSPECTION REPORT DIALOG */}
-//       <Dialog open={reportOpen} onOpenChange={setReportOpen}>
-//         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-//           <DialogHeader>
-//             <DialogTitle className="text-2xl flex items-center gap-2">
-//               <ClipboardCheck className="text-blue-600 w-6 h-6" />
-//               Inspection Report
-//             </DialogTitle>
-//           </DialogHeader>
- 
-//           {reportLoading ? (
-//             <div className="py-20 flex flex-col items-center justify-center gap-4">
-//               <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-//               <p className="text-muted-foreground font-medium">Fetching inspection details...</p>
-//             </div>
-//           ) : reportData ? (
-//             <div className="space-y-6">
- 
-//               {/* Seller & Car Details */}
-// <div className="space-y-4 bg-white p-4 rounded-xl border">
-//   <h4 className="font-bold text-sm mb-2 underline underline-offset-4">Seller & Car Details</h4>
-//   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-//     <div className="text-sm text-slate-600 space-y-1">
-//       <p><b>Seller Name:</b> {reportData.sellerName}</p>
-//       <p><b>Mobile:</b> {reportData.sellerMobile}</p>
-//       {reportData.sellerEmail && <p><b>Email:</b> {reportData.sellerEmail}</p>}
-//       <p><b>City:</b> {reportData.city}</p>
-//       <p><b>Pincode:</b> {reportData.pincode}</p>
-//           <p><b>Make:</b> {reportData.make}</p>
-//       <p><b>Model:</b> {reportData.model}</p>
-//       <p><b>Variant:</b> {reportData.variant}</p>
-//     </div>
-//     <div className="text-sm text-slate-600 space-y-1">
- 
-//       <p><b>Year:</b> {reportData.year}</p>
-//       <p><b>Kilometers Driven:</b> {reportData.kmDriven}</p>
-//       <p><b>Fuel Type:</b> {reportData.fuelType}</p>
-//       <p><b>Transmission:</b> {reportData.transmission}</p>
-//       <p><b>Registration City:</b> {reportData.registrationCity}</p>
-//       <p><b>Registration Number:</b> {reportData.registrationNumber}</p>
-//       <p><b>No. of Owners:</b> {reportData.noOfOwners}</p>
-//       <p><b>Expected Price:</b> ₹{reportData.expectedPrice?.toLocaleString()} {reportData.negotiable ? "(Negotiable)" : "(Fixed)"}</p>
-//     </div>
-//   </div>
-//   {reportData.description && (
-//     <p className="text-sm text-slate-600 mt-2"><b>Description:</b> {reportData.description}</p>
-//   )}
-//   {reportData.images?.length > 0 && (
-//     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
-//       {reportData.images.map((img, idx) => (
-//         <img key={idx} src={img} alt="car" className="rounded-lg border object-cover h-30 w-full" />
-//       ))}
-//     </div>
-//   )}
- 
-//   {/* Listed By Info */}
-// {reportData.listedBy && (
-//   <div className="bg-slate-50 p-4 rounded-xl border mt-4 text-sm text-slate-600">
-//     <h4 className="font-bold text-sm mb-2 underline underline-offset-4">Listed By</h4>
-//     <p><b>ID:</b> {reportData.listedBy._id.slice(-6)}</p>
-//     <p><b>Email:</b> {reportData.listedBy.email}</p>
-//     <p><b>Phone:</b> {reportData.listedBy.phone}</p>
-//   </div>
-// )}
-// </div>
- 
-             
-//               {/* Summary Header */}
-//               <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border">
-//                 <div>
-//                   <Label className="text-xs uppercase text-slate-500">Vehicle Info</Label>
-//                   <p className="font-bold text-lg">{reportData.make} {reportData.model}</p>
-//                   <p className="text-sm text-slate-600">{reportData.year} Model • ₹{reportData.expectedPrice?.toLocaleString()}</p>
-//                 </div>
-//                 <div>
-//                   <Label className="text-xs uppercase text-slate-500">Inspector Info</Label>
-//                   <p className="font-bold text-lg">{reportData.inspectionReport?.inspectorName}</p>
-//                       <p className="font-bold text-sm">{reportData.inspectionReport.inspector?.phone}</p>
-//                   <p className="text-sm text-slate-600">ID: {reportData.inspectionReport?.inspector?._id.slice(-6)}</p>
-//                 </div>
-//               </div>
- 
-//               {/* Health Scores */}
-//               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-//                 {[
-//                   { label: "Exterior", score: reportData.inspectionReport?.exteriorScore, icon: CarFront },
-//                   { label: "Interior", score: reportData.inspectionReport?.interiorScore, icon: User },
-//                   { label: "Engine", score: reportData.inspectionReport?.engineMechanicalScore, icon: Gauge },
-//                   { label: "Tyres", score: reportData.inspectionReport?.tyresBrakesScore, icon: Gauge },
-//                 ].map((item) => (
-//                   <div key={item.label} className="bg-white border-2 border-slate-100 rounded-xl p-3 text-center">
-//                     <p className="text-[10px] font-bold uppercase text-slate-400 mb-1">{item.label}</p>
-//                     <p className="text-2xl font-black text-blue-600">{item.score}<span className="text-xs text-slate-400">/10</span></p>
-//                   </div>
-//                 ))}
-//               </div>
- 
-//               {/* Technical Details */}
-//               <div className="space-y-3 bg-slate-50 p-4 rounded-xl border">
-//                 <h4 className="font-bold text-sm flex items-center gap-2 underline underline-offset-4">
-//                   Technical Checklist
-//                 </h4>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-//                   <div className="flex items-center gap-2 text-sm">
-//                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-//                     <span className="text-slate-600">Odometer: <b>{reportData.inspectionReport?.odometerReading} km</b></span>
-//                   </div>
-//                   <div className="flex items-center gap-2 text-sm">
-//                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-//                     <span className="text-slate-600">Tyre Condition: <b>{reportData.inspectionReport?.tyreCondition}</b></span>
-//                   </div>
-//                   <div className="flex items-center gap-2 text-sm">
-//                     <AlertCircle className="w-4 h-4 text-orange-500" />
-//                     <span className="text-slate-600">Accident History: <b>{reportData.inspectionReport?.accidentHistory}</b></span>
-//                   </div>
-//                   <div className="flex items-center gap-2 text-sm">
-//                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-//                     <span className="text-slate-600">VIN Verified: <b>{reportData.inspectionReport?.vinChassisVerified ? "Yes" : "No"}</b></span>
-//                   </div>
-//                 </div>
-//                 <div className="mt-3 p-3 bg-orange-100/50 border border-orange-200 rounded-lg">
-//                   <p className="text-xs font-bold text-orange-800 uppercase">Inspector's Remarks:</p>
-//                   <p className="text-sm text-orange-900 mt-1 italic">"{reportData.inspectionReport?.minorIssues || "No major issues reported by inspector."}"</p>
-//                 </div>
-//               </div>
- 
- 
-//                 {/* 📸 PHOTOS */}
-//         {reportData.inspectionReport?.photos?.length > 0 && (
-//           <div>
-//             <h4 className="font-bold text-sm mb-2">Inspection Photos</h4>
-//             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-//               {reportData.inspectionReport.photos.map((img, i) => (
-//                 <img
-//                   key={i}
-//                   src={img}
-//                   alt="inspection"
-//                   className="rounded-lg border object-cover h-32 w-full"
-//                 />
-//               ))}
-//             </div>
-//           </div>
-//         )}
- 
- 
-//               <DialogFooter className="flex gap-2">
-//                 <Button variant="outline" onClick={() => setReportOpen(false)} className="flex-1">Close</Button>
-//                 <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold"
-//                   onClick={() => {
-//                     setSelectedCar(reportData);
-//                     setApproveOpen(true);
-//                   }}>
-//                   <Check className="w-4 h-4 mr-2" /> Approve & Go Live
-//                 </Button>
-//               </DialogFooter>
-//             </div>
-//           ) : (
-//             <div className="text-center py-10">Report data not found.</div>
-//           )}
-//         </DialogContent>
-//       </Dialog>
- 
-//       {/* 2. SCHEDULE INSPECTION DIALOG */}
-//       <Dialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
-//         <DialogContent className="sm:max-w-[425px]">
-//           <DialogHeader><DialogTitle>Schedule Inspection</DialogTitle></DialogHeader>
-//           <div className="grid gap-4 py-4">
-//             <div className="space-y-2">
-//               <Label>Date</Label>
-//               <Input type="date" className="w-full" onChange={e => setScheduleData({ ...scheduleData, date: e.target.value })} />
-//             </div>
-//             <div className="space-y-2">
-//               <Label>Time Slot</Label>
-//               <Input type="time" className="w-full" onChange={e => setScheduleData({ ...scheduleData, time: e.target.value })} />
-//             </div>
-//           </div>
-//           <DialogFooter>
-//             <Button onClick={handleSchedule} className="w-full">Send Schedule to User</Button>
-//           </DialogFooter>
-//         </DialogContent>
-//       </Dialog>
- 
-//       {/* 3. ASSIGN INSPECTOR DIALOG */}
-//       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
-//         <DialogContent>
-//           <DialogHeader><DialogTitle>Select Inspector</DialogTitle></DialogHeader>
-//           <div className="py-4">
-//             <select
-//               className="w-full border p-3 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500"
-//               onChange={e => setSelectedInspectorId(e.target.value)}
-//               value={selectedInspectorId}
-//             >
-//               <option value="">-- Choose an Inspector --</option>
-//               {inspectors.map(i => (
-//                 <option key={i._id} value={i._id}>{i.fullName} ({i.phone})</option>
-//               ))}
-//             </select>
-//           </div>
-//           <DialogFooter>
-//             <Button onClick={handleAssign} disabled={!selectedInspectorId} className="w-full bg-purple-600">
-//               Confirm Assignment
-//             </Button>
-//           </DialogFooter>
-//         </DialogContent>
-//       </Dialog>
- 
-//       {/* 4. FINAL APPROVAL DIALOG (MAKE LIVE) */}
-//       <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
-//         <DialogContent>
-//           <DialogHeader>
-//             <DialogTitle>Final Approval: Go Live</DialogTitle>
-//           </DialogHeader>
-//           <div className="space-y-5 py-4">
-//             <div className="space-y-2">
-//               <Label className="font-bold">Assign Quality Rating (1-10)</Label>
-//               <Input
-//                 type="number"
-//                 min={1}
-//                 max={10}
-//                 value={qualityRating}
-//                 onChange={e => setQualityRating(parseInt(e.target.value))}
-//                 className="text-lg font-bold"
-//               />
-//               <p className="text-xs text-muted-foreground italic">Higher rating helps in faster sales.</p>
-//             </div>
-           
-//             <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-//               <p className="text-sm text-green-800 flex gap-2">
-//                 <CheckCircle2 className="w-5 h-5" />
-//                 This car will be listed on the main marketplace for all customers to see.
-//               </p>
-//             </div>
-//           </div>
-//           <DialogFooter>
-//             <Button onClick={handleApprove} className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg">
-//               🚀 Publish Listing Now
-//             </Button>
-//           </DialogFooter>
-//         </DialogContent>
-//       </Dialog>
-//     </div>
-//   );
-// };
- 
-// export default ListingVerification;
- 
-
 
 
 // import { useState, useEffect } from "react";
@@ -1020,8 +534,8 @@
 //   getFranchiseCarListings,
 //   approveCarListing,
 //   scheduleInspection,
-//   assignInspector,
-//   getMyInspectors,
+//   assigninspection,
+//   getMyinspections,
 //   getCompletedInspectionByCarId,
 //   rejectCarListing
 // } from "@/services/franchiseService";
@@ -1059,7 +573,7 @@
 //   inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected";
 //   scheduledDate?: string;
 //   scheduledTime?: string;
-//   assignedInspector?: string;
+//   assignedinspection?: string;
 //   listedBy?: {
 //     _id: string;
 //     email: string;
@@ -1068,8 +582,8 @@
 //   inspectionReport?: {
 //     _id: string;
 //     carId: string;
-//     inspector?: { _id: string; fullName: string; phone: string; email: string; };
-//     inspectorName?: string;
+//     inspection?: { _id: string; fullName: string; phone: string; email: string; };
+//     inspectionName?: string;
 //     odometerReading?: number;
 //     exteriorScore?: number;
 //     interiorScore?: number;
@@ -1083,8 +597,8 @@
 //   };
 // }
 
-// // Interface for inspector data
-// interface Inspector {
+// // Interface for inspection data
+// interface inspection {
 //   _id: string;
 //   fullName: string;
 //   phone: string;
@@ -1096,7 +610,7 @@
  
 //   const [activeTab, setActiveTab] = useState("pending_verification");
 //   const [listings, setListings] = useState<CarListing[]>([]);
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
  
@@ -1111,7 +625,7 @@
  
 //   // Data states
 //   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
-//   const [selectedInspectorId, setSelectedInspectorId] = useState("");
+//   const [selectedinspectionId, setSelectedinspectionId] = useState("");
 //   const [qualityRating, setQualityRating] = useState(7);
 //   const [reportData, setReportData] = useState<CarListing | null>(null);
 //   const [reportLoading, setReportLoading] = useState(false);
@@ -1133,11 +647,11 @@
 //         throw new Error(listingsRes.message || "Failed to fetch listings");
 //       }
  
-//       const inspectorsRes = await getMyInspectors();
-//       if (inspectorsRes.success) {
-//         setInspectors(inspectorsRes.data || []);
+//       const inspectionsRes = await getMyinspections();
+//       if (inspectionsRes.success) {
+//         setinspections(inspectionsRes.data || []);
 //       } else {
-//         toast({ title: "Failed to load inspectors", variant: "destructive" });
+//         toast({ title: "Failed to load inspections", variant: "destructive" });
 //       }
 //     } catch (err: any) {
 //       setError(err.message || "Failed to load data.");
@@ -1153,11 +667,11 @@
 //   }, [activeTab]);
  
 //   // ---------------- HELPERS ----------------
-//   const getInspectorName = (id?: string) =>
-//     inspectors.find(i => i._id === id)?.fullName || "Unassigned";
+//   const getinspectionName = (id?: string) =>
+//     inspections.find(i => i._id === id)?.fullName || "Unassigned";
  
-//   const getInspectorPhone = (id?: string) =>
-//     inspectors.find(i => i._id === id)?.phone || "N/A";
+//   const getinspectionPhone = (id?: string) =>
+//     inspections.find(i => i._id === id)?.phone || "N/A";
  
 //   const formatDate = (d?: string) =>
 //     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "N/A";
@@ -1214,16 +728,16 @@
 //   };
  
 //   const handleAssign = async () => {
-//     if (!selectedCar || !selectedInspectorId) {
-//       toast({ title: "Please select an inspector", variant: "destructive" });
+//     if (!selectedCar || !selectedinspectionId) {
+//       toast({ title: "Please select an inspection", variant: "destructive" });
 //       return;
 //     }
 //     try {
-//       const res = await assignInspector({ carId: selectedCar._id, inspectorId: selectedInspectorId });
+//       const res = await assigninspection({ carId: selectedCar._id, inspectionId: selectedinspectionId });
 //       if (res.success) {
-//         toast({ title: "Inspector assigned successfully" });
+//         toast({ title: "inspection assigned successfully" });
 //         setAssignOpen(false);
-//         setSelectedInspectorId("");
+//         setSelectedinspectionId("");
 //         fetchData();
 //       } else {
 //         throw new Error(res.message || "Assignment failed");
@@ -1334,7 +848,7 @@
 //                     </div>
  
 //                     {/* INSPECTION BADGE INFO */}
-//                     {(car.scheduledDate || car.assignedInspector) && car.inspectionStatus !== 'completed' && (
+//                     {(car.scheduledDate || car.assignedinspection) && car.inspectionStatus !== 'completed' && (
 //                       <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 space-y-1.5 text-xs text-blue-800">
 //                         <p className="font-bold flex items-center gap-1.5">
 //                           <ClipboardCheck className="w-4 h-4" /> Inspection Details
@@ -1344,10 +858,10 @@
 //                             <CalendarDays className="w-3.5 h-3.5" /> {formatDate(car.scheduledDate)} at {car.scheduledTime}
 //                           </p>
 //                         )}
-//                         {car.assignedInspector && (
+//                         {car.assignedinspection && (
 //                           <div className="flex flex-col gap-1">
-//                             <p className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {getInspectorName(car.assignedInspector)}</p>
-//                             <p className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {getInspectorPhone(car.assignedInspector)}</p>
+//                             <p className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {getinspectionName(car.assignedinspection)}</p>
+//                             <p className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {getinspectionPhone(car.assignedinspection)}</p>
 //                           </div>
 //                         )}
 //                       </div>
@@ -1362,7 +876,7 @@
 //                         </Button>
 //                       ) : car.inspectionStatus === "user_accepted" ? (
 //                         <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => { setSelectedCar(car); setAssignOpen(true); }}>
-//                           <UserPlus className="w-4 h-4 mr-2" /> Assign Inspector
+//                           <UserPlus className="w-4 h-4 mr-2" /> Assign inspection
 //                         </Button>
 //                       ) : car.inspectionStatus === "completed" && car.status !== "live" ? (
 //                         <Button className="w-full bg-blue-600 hover:bg-blue-700 font-bold" onClick={() => handleViewReport(car)}>
@@ -1526,10 +1040,10 @@
 //                   <p className="text-sm text-slate-600">{reportData.year} Model • {formatPrice(reportData.expectedPrice)}</p>
 //                 </div>
 //                 <div>
-//                   <Label className="text-xs uppercase text-slate-500">Inspector Info</Label>
-//                   <p className="font-bold text-lg">{reportData.inspectionReport?.inspectorName || 'N/A'}</p>
-//                   <p className="font-bold text-sm">{reportData.inspectionReport?.inspector?.phone || 'N/A'}</p>
-//                   <p className="text-sm text-slate-600">ID: {reportData.inspectionReport?.inspector?._id?.slice(-6) || 'N/A'}</p>
+//                   <Label className="text-xs uppercase text-slate-500">inspection Info</Label>
+//                   <p className="font-bold text-lg">{reportData.inspectionReport?.inspectionName || 'N/A'}</p>
+//                   <p className="font-bold text-sm">{reportData.inspectionReport?.inspection?.phone || 'N/A'}</p>
+//                   <p className="text-sm text-slate-600">ID: {reportData.inspectionReport?.inspection?._id?.slice(-6) || 'N/A'}</p>
 //                 </div>
 //               </div>
  
@@ -1572,8 +1086,8 @@
 //                   </div>
 //                 </div>
 //                 <div className="mt-3 p-3 bg-orange-100/50 border border-orange-200 rounded-lg">
-//                   <p className="text-xs font-bold text-orange-800 uppercase">Inspector's Remarks:</p>
-//                   <p className="text-sm text-orange-900 mt-1 italic">"{reportData.inspectionReport?.minorIssues || "No major issues reported by inspector."}"</p>
+//                   <p className="text-xs font-bold text-orange-800 uppercase">inspection's Remarks:</p>
+//                   <p className="text-sm text-orange-900 mt-1 italic">"{reportData.inspectionReport?.minorIssues || "No major issues reported by inspection."}"</p>
 //                 </div>
 //               </div>
  
@@ -1638,24 +1152,24 @@
 //         </DialogContent>
 //       </Dialog>
  
-//       {/* 3. ASSIGN INSPECTOR DIALOG (Existing) */}
+//       {/* 3. ASSIGN inspection DIALOG (Existing) */}
 //       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
 //         <DialogContent>
-//           <DialogHeader><DialogTitle>Select Inspector for {selectedCar?.make} {selectedCar?.model}</DialogTitle></DialogHeader>
+//           <DialogHeader><DialogTitle>Select inspection for {selectedCar?.make} {selectedCar?.model}</DialogTitle></DialogHeader>
 //           <div className="py-4">
 //             <select
 //               className="w-full border p-3 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500"
-//               onChange={e => setSelectedInspectorId(e.target.value)}
-//               value={selectedInspectorId}
+//               onChange={e => setSelectedinspectionId(e.target.value)}
+//               value={selectedinspectionId}
 //             >
-//               <option value="">-- Choose an Inspector --</option>
-//               {inspectors.map(i => (
+//               <option value="">-- Choose an inspection --</option>
+//               {inspections.map(i => (
 //                 <option key={i._id} value={i._id}>{i.fullName} ({i.phone})</option>
 //               ))}
 //             </select>
 //           </div>
 //           <DialogFooter>
-//             <Button onClick={handleAssign} disabled={!selectedInspectorId} className="w-full bg-purple-600">
+//             <Button onClick={handleAssign} disabled={!selectedinspectionId} className="w-full bg-purple-600">
 //               Confirm Assignment
 //             </Button>
 //           </DialogFooter>
@@ -1756,8 +1270,8 @@
 //   getFranchiseCarListings,
 //   approveCarListing, // Flexible approve function
 //   scheduleInspection,
-//   assignInspector,
-//   getMyInspectors,
+//   assigninspection,
+//   getMyinspections,
 //   getCompletedInspectionByCarId,
 //   rejectCarListing,
 //   editFranchiseListing, // Imported for edit functionality
@@ -1823,7 +1337,7 @@
 //   inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected";
 //   scheduledDate?: string;
 //   scheduledTime?: string;
-//   assignedInspector?: string;
+//   assignedinspection?: string;
 //   listedBy?: {
 //     _id: string;
 //     email: string;
@@ -1832,8 +1346,8 @@
 //   inspectionReport?: {
 //     _id: string;
 //     carId: string;
-//     inspector?: { _id: string; fullName: string; phone: string; email: string; };
-//     inspectorName?: string;
+//     inspection?: { _id: string; fullName: string; phone: string; email: string; };
+//     inspectionName?: string;
 //     odometerReading?: number;
 //     exteriorScore?: number;
 //     interiorScore?: number;
@@ -1847,8 +1361,8 @@
 //   };
 // }
 
-// // Interface for inspector data
-// interface Inspector {
+// // Interface for inspection data
+// interface inspection {
 //   _id: string;
 //   fullName: string;
 //   phone: string;
@@ -1872,7 +1386,7 @@
  
 //   const [activeTab, setActiveTab] = useState<TabStatus>("pending_verification");
 //   const [listings, setListings] = useState<CarListing[]>([]);
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
  
@@ -1889,7 +1403,7 @@
 
 //   // Data states
 //   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
-//   const [selectedInspectorId, setSelectedInspectorId] = useState("");
+//   const [selectedinspectionId, setSelectedinspectionId] = useState("");
 //   const [qualityRating, setQualityRating] = useState(7);
 //   const [reportData, setReportData] = useState<CarListing | null>(null);
 //   const [reportLoading, setReportLoading] = useState(false);
@@ -1923,16 +1437,16 @@
 //         throw new Error(listingsRes.message || "Failed to fetch listings");
 //       }
  
-//       // Only fetch inspectors if needed (e.g., when viewing pending or user_accepted)
+//       // Only fetch inspections if needed (e.g., when viewing pending or user_accepted)
 //       if (activeTab === "pending_verification") {
-//         const inspectorsRes = await getMyInspectors();
-//         if (inspectorsRes.success) {
-//           setInspectors(inspectorsRes.data || []);
+//         const inspectionsRes = await getMyinspections();
+//         if (inspectionsRes.success) {
+//           setinspections(inspectionsRes.data || []);
 //         } else {
-//           toast({ title: "Failed to load inspectors", variant: "destructive" });
+//           toast({ title: "Failed to load inspections", variant: "destructive" });
 //         }
 //       } else {
-//         setInspectors([]);
+//         setinspections([]);
 //       }
 //     } catch (err: any) {
 //       setError(err.message || "Failed to load data.");
@@ -1948,11 +1462,11 @@
 //   }, [activeTab]);
  
 //   // ---------------- HELPERS ----------------
-//   const getInspectorName = (id?: string) =>
-//     inspectors.find(i => i._id === id)?.fullName || "Unassigned";
+//   const getinspectionName = (id?: string) =>
+//     inspections.find(i => i._id === id)?.fullName || "Unassigned";
  
-//   const getInspectorPhone = (id?: string) =>
-//     inspectors.find(i => i._id === id)?.phone || "N/A";
+//   const getinspectionPhone = (id?: string) =>
+//     inspections.find(i => i._id === id)?.phone || "N/A";
  
 //   const formatDate = (d?: string) =>
 //     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "N/A";
@@ -2017,16 +1531,16 @@
 //   };
  
 //   const handleAssign = async () => {
-//     if (!selectedCar || !selectedInspectorId) {
-//       toast({ title: "Please select an inspector", variant: "destructive" });
+//     if (!selectedCar || !selectedinspectionId) {
+//       toast({ title: "Please select an inspection", variant: "destructive" });
 //       return;
 //     }
 //     try {
-//       const res = await assignInspector({ carId: selectedCar._id, inspectorId: selectedInspectorId });
+//       const res = await assigninspection({ carId: selectedCar._id, inspectionId: selectedinspectionId });
 //       if (res.success) {
-//         toast({ title: "Inspector assigned successfully" });
+//         toast({ title: "inspection assigned successfully" });
 //         setAssignOpen(false);
-//         setSelectedInspectorId("");
+//         setSelectedinspectionId("");
 //         fetchData();
 //       } else {
 //         throw new Error(res.message || "Assignment failed");
@@ -2193,7 +1707,7 @@
 //                     </div>
  
 //                     {/* INSPECTION BADGE INFO (only for pending_verification) */}
-//                     {activeTab === "pending_verification" && (car.scheduledDate || car.assignedInspector) && car.inspectionStatus !== 'completed' && (
+//                     {activeTab === "pending_verification" && (car.scheduledDate || car.assignedinspection) && car.inspectionStatus !== 'completed' && (
 //                       <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 space-y-1.5 text-xs text-blue-800">
 //                         <p className="font-bold flex items-center gap-1.5">
 //                           <ClipboardCheck className="w-4 h-4" /> Inspection Details
@@ -2203,10 +1717,10 @@
 //                             <CalendarDays className="w-3.5 h-3.5" /> {formatDate(car.scheduledDate)} at {car.scheduledTime}
 //                           </p>
 //                         )}
-//                         {car.assignedInspector && (
+//                         {car.assignedinspection && (
 //                           <div className="flex flex-col gap-1">
-//                             <p className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {getInspectorName(car.assignedInspector)}</p>
-//                             <p className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {getInspectorPhone(car.assignedInspector)}</p>
+//                             <p className="flex items-center gap-1"><User className="w-3.5 h-3.5" /> {getinspectionName(car.assignedinspection)}</p>
+//                             <p className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {getinspectionPhone(car.assignedinspection)}</p>
 //                           </div>
 //                         )}
 //                       </div>
@@ -2223,7 +1737,7 @@
 //                           )}
 //                           {car.inspectionStatus === "user_accepted" && (
 //                             <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => { setSelectedCar(car); setAssignOpen(true); }}>
-//                               <UserPlus className="w-4 h-4 mr-2" /> Assign Inspector
+//                               <UserPlus className="w-4 h-4 mr-2" /> Assign inspection
 //                             </Button>
 //                           )}
 //                           {car.inspectionStatus === "completed" && car.status !== "live" && (
@@ -2451,7 +1965,7 @@
 //                 </div>
 //                 {reportData.inspectionReport?.minorIssues && (
 //                   <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-900 shadow-sm">
-//                     <p className="text-sm font-bold flex items-center gap-2"><AlertCircle className="w-4 h-4" /> Inspector's Remarks:</p>
+//                     <p className="text-sm font-bold flex items-center gap-2"><AlertCircle className="w-4 h-4" /> inspection's Remarks:</p>
 //                     <p className="text-sm mt-1 italic">"{reportData.inspectionReport.minorIssues}"</p>
 //                   </div>
 //                 )}
@@ -2519,24 +2033,24 @@
 //         </DialogContent>
 //       </Dialog>
  
-//       {/* 3. ASSIGN INSPECTOR DIALOG (Existing) */}
+//       {/* 3. ASSIGN inspection DIALOG (Existing) */}
 //       <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
 //         <DialogContent>
-//           <DialogHeader><DialogTitle>Select Inspector for {selectedCar?.make} {selectedCar?.model}</DialogTitle></DialogHeader>
+//           <DialogHeader><DialogTitle>Select inspection for {selectedCar?.make} {selectedCar?.model}</DialogTitle></DialogHeader>
 //           <div className="py-4">
 //             <select
 //               className="w-full border p-3 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500"
-//               onChange={e => setSelectedInspectorId(e.target.value)}
-//               value={selectedInspectorId}
+//               onChange={e => setSelectedinspectionId(e.target.value)}
+//               value={selectedinspectionId}
 //             >
-//               <option value="">-- Choose an Inspector --</option>
-//               {inspectors.map(i => (
+//               <option value="">-- Choose an inspection --</option>
+//               {inspections.map(i => (
 //                 <option key={i._id} value={i._id}>{i.fullName} ({i.phone})</option>
 //               ))}
 //             </select>
 //           </div>
 //           <DialogFooter>
-//             <Button onClick={handleAssign} disabled={!selectedInspectorId} className="w-full bg-purple-600">
+//             <Button onClick={handleAssign} disabled={!selectedinspectionId} className="w-full bg-purple-600">
 //               Confirm Assignment
 //             </Button>
 //           </DialogFooter>
@@ -2704,8 +2218,8 @@
 //   getFranchiseCarListings,
 //   approveCarListing,
 //   scheduleInspection,
-//   assignInspector,
-//   getMyInspectors,
+//   assigninspection,
+//   getMyinspections,
 //   getCompletedInspectionByCarId,
 //   rejectCarListing,
 //   editFranchiseListing,
@@ -2783,7 +2297,7 @@
 //   inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected";
 //   scheduledDate?: string;
 //   scheduledTime?: string;
-//   assignedInspector?: string;
+//   assignedinspection?: string;
 //   listedBy?: {
 //     _id: string;
 //     email: string;
@@ -2792,8 +2306,8 @@
 //   inspectionReport?: {
 //     _id: string;
 //     carId: string;
-//     inspector?: { _id: string; fullName: string; phone: string; email: string; };
-//     inspectorName?: string;
+//     inspection?: { _id: string; fullName: string; phone: string; email: string; };
+//     inspectionName?: string;
 //     odometerReading?: number;
 //     exteriorScore?: number;
 //     interiorScore?: number;
@@ -2807,8 +2321,8 @@
 //   };
 // }
 
-// // Interface for inspector data
-// export interface Inspector {
+// // Interface for inspection data
+// export interface inspection {
 //   _id: string;
 //   fullName: string;
 //   phone: string;
@@ -2832,7 +2346,7 @@
 
 //   const [activeTab, setActiveTab] = useState<TabStatus>("pending_verification");
 //   const [listings, setListings] = useState<CarListing[]>([]);
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
 
@@ -2849,7 +2363,7 @@
 
 //   // Data states for dialogs
 //   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
-//   const [selectedInspectorId, setSelectedInspectorId] = useState("");
+//   const [selectedinspectionId, setSelectedinspectionId] = useState("");
 //   const [qualityRating, setQualityRating] = useState(7);
 //   const [reportData, setReportData] = useState<CarListing | null>(null);
 //   const [reportLoading, setReportLoading] = useState(false);
@@ -2883,15 +2397,15 @@
 //         throw new Error(listingsRes.message || "Failed to fetch listings");
 //       }
 
-//       if (activeTab === "pending_verification" || activeTab === "approved") { // Fetch inspectors for assign/report view
-//         const inspectorsRes = await getMyInspectors();
-//         if (inspectorsRes.success) {
-//           setInspectors(inspectorsRes.data || []);
+//       if (activeTab === "pending_verification" || activeTab === "approved") { // Fetch inspections for assign/report view
+//         const inspectionsRes = await getMyinspections();
+//         if (inspectionsRes.success) {
+//           setinspections(inspectionsRes.data || []);
 //         } else {
-//           toast({ title: "Failed to load inspectors", variant: "destructive" });
+//           toast({ title: "Failed to load inspections", variant: "destructive" });
 //         }
 //       } else {
-//         setInspectors([]);
+//         setinspections([]);
 //       }
 //     } catch (err: any) {
 //       setError(err.message || "Failed to load data.");
@@ -2907,11 +2421,11 @@
 //   }, [fetchData]);
 
 //   // ---------------- HELPERS ----------------
-//   const getInspectorName = useCallback((id?: string) =>
-//     inspectors.find(i => i._id === id)?.fullName || "Unassigned", [inspectors]);
+//   const getinspectionName = useCallback((id?: string) =>
+//     inspections.find(i => i._id === id)?.fullName || "Unassigned", [inspections]);
 
-//   const getInspectorPhone = useCallback((id?: string) =>
-//     inspectors.find(i => i._id === id)?.phone || "N/A", [inspectors]);
+//   const getinspectionPhone = useCallback((id?: string) =>
+//     inspections.find(i => i._id === id)?.phone || "N/A", [inspections]);
 
 //   const formatDate = useCallback((d?: string) =>
 //     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "N/A", []);
@@ -2976,16 +2490,16 @@
 //   };
 
 //   const handleAssignSubmit = async () => {
-//     if (!selectedCar || !selectedInspectorId) {
-//       toast({ title: "Please select an inspector", variant: "destructive" });
+//     if (!selectedCar || !selectedinspectionId) {
+//       toast({ title: "Please select an inspection", variant: "destructive" });
 //       return;
 //     }
 //     try {
-//       const res = await assignInspector({ carId: selectedCar._id, inspectorId: selectedInspectorId });
+//       const res = await assigninspection({ carId: selectedCar._id, inspectionId: selectedinspectionId });
 //       if (res.success) {
-//         toast({ title: "Inspector assigned successfully" });
+//         toast({ title: "inspection assigned successfully" });
 //         setAssignOpen(false);
-//         setSelectedInspectorId("");
+//         setSelectedinspectionId("");
 //         fetchData();
 //       } else {
 //         throw new Error(res.message || "Assignment failed");
@@ -3123,9 +2637,9 @@
 //             listings={listings}
 //             activeTab={activeTab}
 //             statusConfig={statusConfig}
-//             inspectors={inspectors}
-//             getInspectorName={getInspectorName}
-//             getInspectorPhone={getInspectorPhone}
+//             inspections={inspections}
+//             getinspectionName={getinspectionName}
+//             getinspectionPhone={getinspectionPhone}
 //             formatDate={formatDate}
 //             formatPrice={formatPrice}
 //             onScheduleClick={(car) => { setSelectedCar(car); setScheduleOpen(true); }}
@@ -3171,9 +2685,9 @@
 //         open={assignOpen}
 //         onOpenChange={setAssignOpen}
 //         selectedCar={selectedCar}
-//         inspectors={inspectors}
-//         selectedInspectorId={selectedInspectorId}
-//         onInspectorIdChange={setSelectedInspectorId}
+//         inspections={inspections}
+//         selectedinspectionId={selectedinspectionId}
+//         oninspectionIdChange={setSelectedinspectionId}
 //         onSubmit={handleAssignSubmit}
 //       />
 
@@ -3224,6 +2738,617 @@
 
 
 // src/components/franchise/listing-verification/ListingVerification.tsx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { useState, useEffect, useCallback } from "react";
+// import { useToast } from "@/hooks/use-toast";
+
+// // UI Components from shadcn/ui
+// import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+// import { Button } from "@/components/ui/button";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { AlertCircle, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+
+// // Service Imports
+// import {
+//   getFranchiseCarListings,
+//   approveCarListing,
+//   scheduleInspection,
+//   assigninspection,
+//   getMyinspections,
+//   getCompletedInspectionByCarId,
+//   rejectCarListing,
+//   editFranchiseListing,
+//   getCarInquiries,
+// } from "@/services/franchiseService";
+
+// // Child Component Imports
+// import ListingVerificationHeader from "../franchise/pages/ListingVerificationHeader";
+// import ListingVerificationListingsGrid from "../franchise/pages/ListingVerificationListingsGrid";
+// import ListingVerificationDetailsDialog from "../franchise/pages/ListingVerificationDetailsDialog";
+// import ListingVerificationReportDialog from "../franchise/pages/ListingVerificationReportDialog";
+// import ListingVerificationScheduleDialog from "../franchise/pages/ListingVerificationScheduleDialog";
+// import ListingVerificationAssignDialog from "../franchise/pages/ListingVerificationAssignDialog";
+// import ListingVerificationApproveDialog from "../franchise/pages/ListingVerificationApproveDialog";
+// import ListingVerificationRejectDialog from "../franchise/pages/ListingVerificationRejectDialog";
+// import ListingVerificationEditDialog from "../franchise/pages/ListingVerificationEditDialog";
+// import ListingVerificationInquiriesDialog from "../franchise/pages/ListingVerificationInquiriesDialog";
+
+// // Interface for a single Car Inquiry
+// export interface CarInquiry {
+//   _id: string;
+//   carId: string;
+//   buyerName: string;
+//   buyerPhone: string;
+//   buyerEmail?: string;
+//   buyerMessage?: string;
+//   status: string;
+//   createdAt: string;
+// }
+
+// // Interface for the entire Inquiry API Response
+// export interface CarInquiriesResponse {
+//   success: boolean;
+//   message?: string;
+//   car: {
+//     make: string;
+//     model: string;
+//     variant: string;
+//     year: number;
+//   };
+//   totalInquiries: number;
+//   inquiries: CarInquiry[];
+// }
+
+// // Enhanced CarListing Interface
+// export interface CarListing {
+//   _id: string;
+//   sellerName: string;
+//   sellerMobile: string;
+//   sellerEmail?: string;
+//   city: string;
+//   pincode: string;
+//   make: string;
+//   model: string;
+//   variant?: string;
+//   year: number;
+//   kmDriven: number;
+//   fuelType: string;
+//   rejectionReason?: string;
+//   approvalRemark?: string;
+//   transmission: string;
+//   registrationCity: string;
+//   registrationNumber: string;
+//   noOfOwners: number;
+//   color?: string;
+//   expectedPrice: number;
+//   negotiable: boolean;
+//   description?: string;
+//   images: string[];
+//   inspectionVideo?: string;
+//   status: "pending_verification" | "approved" | "live" | "sold" | "rejected";
+//   qualityRating?: number;
+//   createdAt: string;
+
+//   inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected";
+//   scheduledDate?: string;
+//   scheduledTime?: string;
+//   assignedinspection?: string;
+//   listedBy?: {
+//     _id: string;
+//     email: string;
+//     phone: string;
+//   };
+//   inspectionReport?: {
+//     _id: string;
+//     carId: string;
+//     inspection?: { _id: string; fullName: string; phone: string; email: string; };
+//     inspectionName?: string;
+//     odometerReading?: number;
+//     exteriorScore?: number;
+//     interiorScore?: number;
+//     engineMechanicalScore?: number;
+//     tyresBrakesScore?: number;
+//     tyreCondition?: string;
+//     accidentHistory?: string;
+//     vinChassisVerified?: boolean;
+//     minorIssues?: string;
+//     photos?: string[];
+//   };
+// }
+
+// // Interface for inspection data
+// export interface inspection {
+//   _id: string;
+//   fullName: string;
+//   phone: string;
+//   email: string;
+// }
+
+// // Define the types for your tabs
+// export type TabStatus = "pending_verification" | "approved" | "live" | "sold" | "rejected";
+
+// // Configuration for tab badges (used for both tabs and card status badge)
+// export const statusConfig: Record<TabStatus, { label: string; color: string; icon: React.ReactNode }> = {
+//   pending_verification: { label: "Pending Verification", color: "bg-yellow-500/20 text-yellow-700 border-yellow-500/30", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
+//   approved: { label: "Approved", color: "bg-blue-500/20 text-blue-700 border-blue-500/30", icon: <CheckCircle2 className="w-3 h-3" /> },
+//   live: { label: "Live", color: "bg-green-500/20 text-green-700 border-green-500/30", icon: <CheckCircle2 className="w-3 h-3" /> },
+//   sold: { label: "Sold", color: "bg-indigo-500/20 text-indigo-700 border-indigo-500/30", icon: <CheckCircle2 className="w-3 h-3" /> },
+//   rejected: { label: "Rejected", color: "bg-red-500/20 text-red-700 border-red-500/30", icon: <XCircle className="w-3 h-3" /> },
+// };
+
+// const ListingVerification = () => {
+//   const { toast } = useToast();
+
+//   const [activeTab, setActiveTab] = useState<TabStatus>("pending_verification");
+//   const [listings, setListings] = useState<CarListing[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   // Dialog open/close states
+//   const [selectedCar, setSelectedCar] = useState<CarListing | null>(null);
+//   const [scheduleOpen, setScheduleOpen] = useState(false);
+//   const [assignOpen, setAssignOpen] = useState(false);
+//   const [approveOpen, setApproveOpen] = useState(false);
+//   const [rejectOpen, setRejectOpen] = useState(false);
+//   const [reportOpen, setReportOpen] = useState(false);
+//   const [detailsOpen, setDetailsOpen] = useState(false);
+//   const [editOpen, setEditOpen] = useState(false);
+//   const [inquiriesOpen, setInquiriesOpen] = useState(false);
+
+//   // Data states for dialogs
+//   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
+//   const [selectedinspectionId, setSelectedinspectionId] = useState("");
+//   const [qualityRating, setQualityRating] = useState(7);
+//   const [reportData, setReportData] = useState<CarListing | null>(null);
+//   const [reportLoading, setReportLoading] = useState(false);
+//   const [rejectReason, setRejectReason] = useState("");
+//   const [editForm, setEditForm] = useState({
+//     make: "",
+//     model: "",
+//     variant: "",
+//     year: 0,
+//     kmDriven: 0,
+//     expectedPrice: 0,
+//   });
+//   const [carInquiries, setCarInquiries] = useState<CarInquiry[]>([]);
+//   const [totalInquiriesCount, setTotalInquiriesCount] = useState(0);
+//   const [inquiriesLoading, setInquiriesLoading] = useState(false);
+
+//   // Loading states for actions
+//   const [approving, setApproving] = useState(false);
+//   const [rejecting, setRejecting] = useState(false);
+//   const [editing, setEditing] = useState(false);
+
+//   // ---------------- FETCH DATA ----------------
+//   const fetchData = useCallback(async () => {
+//     setLoading(true);
+//     setError(null);
+//     try {
+//       const listingsRes = await getFranchiseCarListings(activeTab);
+//       if (listingsRes.success) {
+//         setListings(listingsRes.data || []);
+//       } else {
+//         throw new Error(listingsRes.message || "Failed to fetch listings");
+//       }
+
+//       // Only fetch inspections for "pending_verification" tab, as per original logic
+//       if (activeTab === "pending_verification") {
+//         const inspectionsRes = await getMyinspections();
+//         if (inspectionsRes.success) {
+//           setinspections(inspectionsRes.data || []);
+//         } else {
+//           toast({ title: "Failed to load inspections", variant: "destructive" });
+//         }
+//       } else {
+//         setinspections([]);
+//       }
+//     } catch (err: any) {
+//       setError(err.message || "Failed to load data.");
+//       toast({ title: "Failed to load listings", description: err.message, variant: "destructive" });
+//       setListings([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [activeTab, toast]);
+
+//   useEffect(() => {
+//     fetchData();
+//   }, [fetchData]);
+
+//   // ---------------- HELPERS ----------------
+//   const getinspectionName = useCallback((id?: string) =>
+//     inspections.find(i => i._id === id)?.fullName || "Unassigned", [inspections]);
+
+//   const getinspectionPhone = useCallback((id?: string) =>
+//     inspections.find(i => i._id === id)?.phone || "N/A", [inspections]);
+
+//   const formatDate = useCallback((d?: string) =>
+//     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "N/A", []);
+
+//   const formatDateTime = useCallback((dt?: string) => {
+//     if (!dt) return "N/A";
+//     const date = new Date(dt);
+//     return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) +
+//            " " +
+//            date.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit', hour12: true });
+//   }, []);
+
+//   const formatPrice = useCallback((price?: number) => {
+//     if (price === undefined || price === null) return "N/A";
+//     return new Intl.NumberFormat("en-IN", {
+//       style: "currency",
+//       currency: "INR",
+//       maximumFractionDigits: 0,
+//     }).format(price);
+//   }, []);
+
+//   // ---------------- ACTION HANDLERS (passed to children) ----------------
+
+//   const handleViewReport = async (car: CarListing) => {
+//     setSelectedCar(car);
+//     setReportLoading(true);
+//     setReportOpen(true);
+//     try {
+//       const res = await getCompletedInspectionByCarId(car._id);
+//       if (res.success) {
+//         setReportData(res.data);
+//       } else {
+//         throw new Error(res.message || "Report fetch failed");
+//       }
+//     } catch (error: any) {
+//       toast({ title: "Report fetch karne mein error aayi", description: error.message, variant: "destructive" });
+//       setReportOpen(false);
+//       setReportData(null);
+//     } finally {
+//       setReportLoading(false);
+//     }
+//   };
+
+//   const handleScheduleSubmit = async () => {
+//     if (!selectedCar || !scheduleData.date || !scheduleData.time) {
+//       toast({ title: "Please select date and time", variant: "destructive" });
+//       return;
+//     }
+//     try {
+//       const res = await scheduleInspection({ carId: selectedCar._id, scheduledDate: scheduleData.date, scheduledTime: scheduleData.time });
+//       if (res.success) {
+//         toast({ title: "Inspection scheduled successfully" });
+//         setScheduleOpen(false);
+//         setScheduleData({ date: "", time: "" });
+//         fetchData();
+//       } else {
+//         throw new Error(res.message || "Schedule failed");
+//       }
+//     } catch (err: any) {
+//       toast({ title: "Schedule failed", description: err.message, variant: "destructive" });
+//     }
+//   };
+
+//   const handleAssignSubmit = async () => {
+//     if (!selectedCar || !selectedinspectionId) {
+//       toast({ title: "Please select an inspection", variant: "destructive" });
+//       return;
+//     }
+//     try {
+//       const res = await assigninspection({ carId: selectedCar._id, inspectionId: selectedinspectionId });
+//       if (res.success) {
+//         toast({ title: "inspection assigned successfully" });
+//         setAssignOpen(false);
+//         setSelectedinspectionId("");
+//         fetchData();
+//       } else {
+//         throw new Error(res.message || "Assignment failed");
+//       }
+//     } catch (err: any) {
+//       toast({ title: "Assignment failed", description: err.message, variant: "destructive" });
+//     }
+//   };
+
+//   const handleApproveGoLive = async (carToApprove: CarListing, rating: number) => {
+//     if (!carToApprove || rating < 1 || rating > 10) {
+//       toast({ title: "Invalid quality rating", variant: "destructive" });
+//       return;
+//     }
+//     setApproving(true);
+//     try {
+//       const res = await approveCarListing(carToApprove._id, rating );
+//       if (res.success) {
+//         toast({ title: "Car is now LIVE for buyers! 🚀" });
+//         setApproveOpen(false);
+//         setReportOpen(false); // Close report dialog if open
+//         fetchData();
+//       } else {
+//         throw new Error(res.message || "Approval failed");
+//       }
+//     } catch (err: any) {
+//       toast({ title: "Approval failed", description: err.message, variant: "destructive" });
+//     } finally {
+//       setApproving(false);
+//     }
+//   };
+
+//   const handleRejectListingSubmit = async () => {
+//     if (!selectedCar || !rejectReason.trim()) {
+//       toast({ title: "Rejection reason is required", variant: "destructive" });
+//       return;
+//     }
+//     setRejecting(true);
+//     try {
+//       const res = await rejectCarListing(selectedCar._id, rejectReason);
+//       if (res.success) {
+//         toast({ title: "Listing Rejected", description: "Car listing has been moved to rejected status." });
+//         setRejectOpen(false);
+//         setRejectReason("");
+//         fetchData();
+//       } else {
+//         throw new Error(res.message || "Rejection failed");
+//       }
+//     } catch (err: any) {
+//       toast({ title: "Rejection failed", description: err.message, variant: "destructive" });
+//     } finally {
+//       setRejecting(false);
+//     }
+//   };
+
+//   const handleEditSubmit = async () => {
+//     if (!selectedCar) return;
+//     setEditing(true);
+//     try {
+//       const res = await editFranchiseListing(selectedCar._id, editForm);
+//       if (res.success) {
+//         toast({ title: "Listing Updated", description: "Car details have been successfully updated." });
+//         setEditOpen(false);
+//         fetchData();
+//       } else {
+//         throw new Error(res.message || "Edit failed");
+//       }
+//     } catch (err: any) {
+//       toast({ title: "Edit failed", description: err.message, variant: "destructive" });
+//     } finally {
+//       setEditing(false);
+//     }
+//   };
+
+//   const handleViewInquiries = async (car: CarListing) => {
+//     setSelectedCar(car);
+//     setInquiriesLoading(true);
+//     setInquiriesOpen(true);
+//     setCarInquiries([]);
+//     setTotalInquiriesCount(0);
+//     try {
+//       const res: CarInquiriesResponse = await getCarInquiries(car._id);
+//       if (res.success) {
+//         setCarInquiries(res.inquiries || []);
+//         setTotalInquiriesCount(res.totalInquiries || 0);
+//       } else {
+//         throw new Error(res.message || "Failed to fetch inquiries");
+//       }
+//     } catch (error: any) {
+//       toast({ title: "Failed to fetch inquiries", description: error.message, variant: "destructive" });
+//       setInquiriesOpen(false);
+//     } finally {
+//       setInquiriesLoading(false);
+//     }
+//   };
+
+//   // Callback for opening edit dialog (to pre-fill form)
+//   const openEditDialog = (car: CarListing) => {
+//     setSelectedCar(car);
+//     setEditForm({
+//       make: car.make,
+//       model: car.model,
+//       variant: car.variant || '',
+//       year: car.year,
+//       kmDriven: car.kmDriven,
+//       expectedPrice: car.expectedPrice,
+//     });
+//     setEditOpen(true);
+//   };
+
+//   // Callback for opening approve dialog (from report dialog)
+//   const openApproveDialogFromReport = (car: CarListing, avgScore: number) => {
+//     setSelectedCar(car);
+//     setQualityRating(Math.round(avgScore) || 7);
+//     setApproveOpen(true);
+//   };
+
+//   return (
+//     <div className="p-6 max-w-7xl mx-auto space-y-6">
+//       <ListingVerificationHeader onRefresh={fetchData} />
+
+//       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabStatus)}>
+//         <TabsList className="bg-slate-100 p-1">
+//           {["pending_verification", "approved", "live", "rejected", "sold"].map(t => (
+//             <TabsTrigger key={t} value={t} className="capitalize">
+//               {t.replace("_", " ")}
+//             </TabsTrigger>
+//           ))}
+//         </TabsList>
+
+//         <TabsContent value={activeTab} className="mt-6">
+//           <ListingVerificationListingsGrid
+//             loading={loading}
+//             error={error}
+//             listings={listings}
+//             activeTab={activeTab}
+//             statusConfig={statusConfig}
+//             inspections={inspections} // Passed, though mostly used by helpers for card content.
+//             getinspectionName={getinspectionName}
+//             getinspectionPhone={getinspectionPhone}
+//             formatDate={formatDate}
+//             formatPrice={formatPrice}
+//             onScheduleClick={(car) => { setSelectedCar(car); setScheduleOpen(true); }}
+//             onAssignClick={(car) => { setSelectedCar(car); setAssignOpen(true); }}
+//             onViewReportClick={handleViewReport}
+//             onDetailsClick={(car) => { setSelectedCar(car); setDetailsOpen(true); }}
+//             onEditClick={openEditDialog}
+//             onRejectClick={(car) => { setSelectedCar(car); setRejectOpen(true); }}
+//             onViewInquiriesClick={handleViewInquiries}
+//           />
+//         </TabsContent>
+//       </Tabs>
+
+//       {/* ------------------- DIALOGS (MODALS) ------------------- */}
+
+//       <ListingVerificationDetailsDialog
+//         open={detailsOpen}
+//         onOpenChange={setDetailsOpen}
+//         car={selectedCar}
+//         formatPrice={formatPrice}
+//       />
+
+//       <ListingVerificationReportDialog
+//         open={reportOpen}
+//         onOpenChange={setReportOpen}
+//         car={selectedCar} // Pass selectedCar for overall context
+//         reportData={reportData}
+//         reportLoading={reportLoading}
+//         formatPrice={formatPrice}
+//         onApproveGoLive={openApproveDialogFromReport}
+//       />
+
+//       <ListingVerificationScheduleDialog
+//         open={scheduleOpen}
+//         onOpenChange={setScheduleOpen}
+//         selectedCar={selectedCar}
+//         scheduleData={scheduleData}
+//         onScheduleDataChange={setScheduleData}
+//         onSubmit={handleScheduleSubmit}
+//       />
+
+//       <ListingVerificationAssignDialog
+//         open={assignOpen}
+//         onOpenChange={setAssignOpen}
+//         selectedCar={selectedCar}
+//         inspections={inspections}
+//         selectedinspectionId={selectedinspectionId}
+//         oninspectionIdChange={setSelectedinspectionId}
+//         onSubmit={handleAssignSubmit}
+//       />
+
+//       <ListingVerificationApproveDialog
+//         open={approveOpen}
+//         onOpenChange={setApproveOpen}
+//         selectedCar={selectedCar}
+//         qualityRating={qualityRating}
+//         onQualityRatingChange={setQualityRating}
+//         onSubmit={() => handleApproveGoLive(selectedCar!, qualityRating)} // Assert non-null for selectedCar
+//         approving={approving}
+//       />
+
+//       <ListingVerificationRejectDialog
+//         open={rejectOpen}
+//         onOpenChange={setRejectOpen}
+//         selectedCar={selectedCar}
+//         rejectReason={rejectReason}
+//         onRejectReasonChange={setRejectReason}
+//         onSubmit={handleRejectListingSubmit}
+//         rejecting={rejecting}
+//       />
+
+//       <ListingVerificationEditDialog
+//         open={editOpen}
+//         onOpenChange={setEditOpen}
+//         selectedCar={selectedCar}
+//         editForm={editForm}
+//         onEditFormChange={(field, value) => setEditForm(prev => ({ ...prev, [field]: value }))}
+//         onSubmit={handleEditSubmit}
+//         editing={editing}
+//       />
+
+//       <ListingVerificationInquiriesDialog
+//         open={inquiriesOpen}
+//         onOpenChange={setInquiriesOpen}
+//         selectedCar={selectedCar}
+//         carInquiries={carInquiries}
+//         totalInquiriesCount={totalInquiriesCount}
+//         inquiriesLoading={inquiriesLoading}
+//         formatDateTime={formatDateTime}
+//       />
+//     </div>
+//   );
+// };
+
+// export default ListingVerification;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -3238,8 +3363,8 @@ import {
   getFranchiseCarListings,
   approveCarListing,
   scheduleInspection,
-  assignInspector,
-  getMyInspectors,
+  assigninspection,
+  getMyinspections,
   getCompletedInspectionByCarId,
   rejectCarListing,
   editFranchiseListing,
@@ -3314,10 +3439,11 @@ export interface CarListing {
   qualityRating?: number;
   createdAt: string;
 
-  inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected";
+  // IMPORTANT: Updated inspectionStatus type to include "user_rejected_schedule"
+  inspectionStatus: "pending" | "user_accepted" | "scheduled" | "assigned" | "completed" | "rejected" | "user_rejected_schedule";
   scheduledDate?: string;
   scheduledTime?: string;
-  assignedInspector?: string;
+  assignedinspection?: string;
   listedBy?: {
     _id: string;
     email: string;
@@ -3326,8 +3452,8 @@ export interface CarListing {
   inspectionReport?: {
     _id: string;
     carId: string;
-    inspector?: { _id: string; fullName: string; phone: string; email: string; };
-    inspectorName?: string;
+    inspection?: { _id: string; fullName: string; phone: string; email: string; };
+    inspectionName?: string;
     odometerReading?: number;
     exteriorScore?: number;
     interiorScore?: number;
@@ -3341,8 +3467,8 @@ export interface CarListing {
   };
 }
 
-// Interface for inspector data
-export interface Inspector {
+// Interface for inspection data
+export interface inspection {
   _id: string;
   fullName: string;
   phone: string;
@@ -3366,7 +3492,7 @@ const ListingVerification = () => {
 
   const [activeTab, setActiveTab] = useState<TabStatus>("pending_verification");
   const [listings, setListings] = useState<CarListing[]>([]);
-  const [inspectors, setInspectors] = useState<Inspector[]>([]);
+  const [inspections, setinspections] = useState<inspection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -3383,7 +3509,7 @@ const ListingVerification = () => {
 
   // Data states for dialogs
   const [scheduleData, setScheduleData] = useState({ date: "", time: "" });
-  const [selectedInspectorId, setSelectedInspectorId] = useState("");
+  const [selectedinspectionId, setSelectedinspectionId] = useState("");
   const [qualityRating, setQualityRating] = useState(7);
   const [reportData, setReportData] = useState<CarListing | null>(null);
   const [reportLoading, setReportLoading] = useState(false);
@@ -3417,16 +3543,16 @@ const ListingVerification = () => {
         throw new Error(listingsRes.message || "Failed to fetch listings");
       }
 
-      // Only fetch inspectors for "pending_verification" tab, as per original logic
+      // Only fetch inspections for "pending_verification" tab, as per original logic
       if (activeTab === "pending_verification") {
-        const inspectorsRes = await getMyInspectors();
-        if (inspectorsRes.success) {
-          setInspectors(inspectorsRes.data || []);
+        const inspectionsRes = await getMyinspections();
+        if (inspectionsRes.success) {
+          setinspections(inspectionsRes.data || []);
         } else {
-          toast({ title: "Failed to load inspectors", variant: "destructive" });
+          toast({ title: "Failed to load inspections", variant: "destructive" });
         }
       } else {
-        setInspectors([]);
+        setinspections([]);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load data.");
@@ -3442,11 +3568,11 @@ const ListingVerification = () => {
   }, [fetchData]);
 
   // ---------------- HELPERS ----------------
-  const getInspectorName = useCallback((id?: string) =>
-    inspectors.find(i => i._id === id)?.fullName || "Unassigned", [inspectors]);
+  const getinspectionName = useCallback((id?: string) =>
+    inspections.find(i => i._id === id)?.fullName || "Unassigned", [inspections]);
 
-  const getInspectorPhone = useCallback((id?: string) =>
-    inspectors.find(i => i._id === id)?.phone || "N/A", [inspectors]);
+  const getinspectionPhone = useCallback((id?: string) =>
+    inspections.find(i => i._id === id)?.phone || "N/A", [inspections]);
 
   const formatDate = useCallback((d?: string) =>
     d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "N/A", []);
@@ -3511,16 +3637,16 @@ const ListingVerification = () => {
   };
 
   const handleAssignSubmit = async () => {
-    if (!selectedCar || !selectedInspectorId) {
-      toast({ title: "Please select an inspector", variant: "destructive" });
+    if (!selectedCar || !selectedinspectionId) {
+      toast({ title: "Please select an inspection", variant: "destructive" });
       return;
     }
     try {
-      const res = await assignInspector({ carId: selectedCar._id, inspectorId: selectedInspectorId });
+      const res = await assigninspection({ carId: selectedCar._id, inspectionId: selectedinspectionId });
       if (res.success) {
-        toast({ title: "Inspector assigned successfully" });
+        toast({ title: "inspection assigned successfully" });
         setAssignOpen(false);
-        setSelectedInspectorId("");
+        setSelectedinspectionId("");
         fetchData();
       } else {
         throw new Error(res.message || "Assignment failed");
@@ -3537,7 +3663,7 @@ const ListingVerification = () => {
     }
     setApproving(true);
     try {
-      const res = await approveCarListing(carToApprove._id, { qualityRating: rating });
+      const res = await approveCarListing(carToApprove._id, rating );
       if (res.success) {
         toast({ title: "Car is now LIVE for buyers! 🚀" });
         setApproveOpen(false);
@@ -3658,9 +3784,9 @@ const ListingVerification = () => {
             listings={listings}
             activeTab={activeTab}
             statusConfig={statusConfig}
-            inspectors={inspectors} // Passed, though mostly used by helpers for card content.
-            getInspectorName={getInspectorName}
-            getInspectorPhone={getInspectorPhone}
+            inspections={inspections} // Passed, though mostly used by helpers for card content.
+            getinspectionName={getinspectionName}
+            getinspectionPhone={getinspectionPhone}
             formatDate={formatDate}
             formatPrice={formatPrice}
             onScheduleClick={(car) => { setSelectedCar(car); setScheduleOpen(true); }}
@@ -3706,9 +3832,9 @@ const ListingVerification = () => {
         open={assignOpen}
         onOpenChange={setAssignOpen}
         selectedCar={selectedCar}
-        inspectors={inspectors}
-        selectedInspectorId={selectedInspectorId}
-        onInspectorIdChange={setSelectedInspectorId}
+        inspections={inspections}
+        selectedinspectionId={selectedinspectionId}
+        oninspectionIdChange={setSelectedinspectionId}
         onSubmit={handleAssignSubmit}
       />
 

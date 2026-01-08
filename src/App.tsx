@@ -29,7 +29,7 @@ import DealTracking from "./pages/franchise/Deals";
 import FranchiseMyListings from "./pages/franchise/MyListings";
 import FranchiseReports from "./pages/franchise/Reports";
 import FranchiseAccount from "./pages/franchise/Account";
-import Inspectors from "./pages/franchise/Inspection";
+import inspections from "./pages/franchise/Inspections";
 
 
 
@@ -42,6 +42,14 @@ import DealerWallet from "./pages/dealer/Wallet";
 import DealerAnalytics from "./pages/dealer/Analytics";
 import DealerProfile from "./pages/dealer/Profile";
 import ListingPackages from "./pages/franchise/ListingPackages";
+
+
+import InspectionTasks from "./pages/inspection/Tasks";
+
+import SubmitReport from "./pages/inspection/pages/SubmitReport";
+import CompletedInspections from "./pages/inspection/pages/CompletedInspections";
+import InspectionDashboard from "./pages/inspection/InspectionDashboard";
+import Inspections from "./pages/franchise/Inspections";
 
 const queryClient = new QueryClient();
 
@@ -80,10 +88,7 @@ const App = () => (
             <Route path="reports" element={<FranchiseReports />} />
             <Route path="account" element={<FranchiseAccount />} />
              <Route path="listing-packages" element={<ListingPackages/>} />
-              <Route path="Inspectors" element={<Inspectors/>} />
-             
-             
- 
+            <Route path="inspections" element={<Inspections/>}/>
           </Route>
 
           {/* Dealer Routes */}
@@ -97,6 +102,17 @@ const App = () => (
             <Route path="analytics" element={<DealerAnalytics />} />
             <Route path="profile" element={<DealerProfile />} />
           </Route> */} 
+
+            {/* Inspection Routes */}
+              <Route path="/inspection" element={<DashboardLayout role="inspection" />}>
+                <Route path="dashboard" element={<InspectionDashboard/>} /> {/* Abhi ke liye Franchise wala reuse kar sakte hain */}
+                <Route path="tasks" element={<InspectionTasks/>} /> 
+                <Route path="submit-report/:carId" element={<SubmitReport/>} />
+                <Route path="Completedinspections" element={<CompletedInspections />} />
+              </Route>
+
+
+
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

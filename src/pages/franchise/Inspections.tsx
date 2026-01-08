@@ -15,13 +15,13 @@
 // import { UserPlus, Phone, Mail, MapPin } from "lucide-react";
  
 // import {
-//   getMyInspectors,
-//   createFranchiseInspector,
+//   getMyinspections,
+//   createFranchiseinspection,
 // } from "@/services/franchiseService";
  
 // /* ================= INTERFACE ================= */
  
-// interface Inspector {
+// interface inspection {
 //   _id: string;
 //   fullName: string;
 //   email: string;
@@ -33,10 +33,10 @@
  
 // /* ================= COMPONENT ================= */
  
-// const Inspectors = () => {
+// const inspections = () => {
 //   const { toast } = useToast();
  
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [open, setOpen] = useState(false);
  
@@ -53,13 +53,13 @@
  
 //   /* ================= FETCH ================= */
  
-//   const fetchInspectors = async () => {
+//   const fetchinspections = async () => {
 //     try {
-//       const res = await getMyInspectors();
-//       if (res.success) setInspectors(res.data);
+//       const res = await getMyinspections();
+//       if (res.success) setinspections(res.data);
 //     } catch {
 //       toast({
-//         title: "Failed to load inspectors",
+//         title: "Failed to load inspections",
 //         variant: "destructive",
 //       });
 //     } finally {
@@ -68,7 +68,7 @@
 //   };
  
 //   useEffect(() => {
-//     fetchInspectors();
+//     fetchinspections();
 //   }, []);
  
 //   /* ================= IMAGE CHANGE ================= */
@@ -85,11 +85,11 @@
  
 //   const handleCreate = async () => {
 //     try {
-//       const res = await createFranchiseInspector(form);
+//       const res = await createFranchiseinspection(form);
 //       if (res.success) {
-//         toast({ title: "Inspector created successfully" });
+//         toast({ title: "inspection created successfully" });
 //         setOpen(false);
-//         fetchInspectors();
+//         fetchinspections();
  
 //         setForm({
 //           fullName: "",
@@ -117,17 +117,17 @@
 //     <div className="p-6 space-y-6">
 //       {/* HEADER */}
 //       <div className="flex justify-between items-center">
-//         <h1 className="text-3xl font-bold">My Inspectors</h1>
+//         <h1 className="text-3xl font-bold">My inspections</h1>
 //         <Button onClick={() => setOpen(true)} className="gap-2">
 //           <UserPlus className="w-4 h-4" />
-//           Add Inspector
+//           Add inspection
 //         </Button>
 //       </div>
  
 //       {/* LIST */}
 //       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 //         {!loading &&
-//           inspectors.map((i) => (
+//           inspections.map((i) => (
 //             <Card key={i._id} className="glass-card">
 //               <CardContent className="p-4 space-y-3">
 //                 <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@
 //       <Dialog open={open} onOpenChange={setOpen}>
 //         <DialogContent>
 //           <DialogHeader>
-//             <DialogTitle>Create Inspector</DialogTitle>
+//             <DialogTitle>Create inspection</DialogTitle>
 //           </DialogHeader>
  
 //           {/* IMAGE PREVIEW */}
@@ -219,7 +219,7 @@
 //           </div>
  
 //           <Button onClick={handleCreate} className="mt-4 w-full">
-//             Create Inspector
+//             Create inspection
 //           </Button>
 //         </DialogContent>
 //       </Dialog>
@@ -227,7 +227,7 @@
 //   );
 // };
  
-// export default Inspectors;
+// export default inspections;
  
 //  import { useState, useEffect, useRef } from "react";
 // import { Card } from "@/components/ui/card";
@@ -256,7 +256,7 @@
 // } from "lucide-react";
 
 // // Types
-// interface Inspector {
+// interface inspection {
 //   _id: string;
 //   fullName: string;
 //   email: string;
@@ -267,7 +267,7 @@
 // }
 
 // // Mock API functions - replace with real APIs
-// const getMyInspectors = async (): Promise<Inspector[]> => {
+// const getMyinspections = async (): Promise<inspection[]> => {
 //   await new Promise((resolve) => setTimeout(resolve, 800));
 //   return [
 //     {
@@ -300,7 +300,7 @@
 //   ];
 // };
 
-// const createFranchiseInspector = async (data: FormData): Promise<Inspector> => {
+// const createFranchiseinspection = async (data: FormData): Promise<inspection> => {
 //   await new Promise((resolve) => setTimeout(resolve, 1000));
 //   return {
 //     _id: Date.now().toString(),
@@ -313,9 +313,9 @@
 //   };
 // };
 
-// const Inspectors = () => {
+// const inspections = () => {
 //   const { toast } = useToast();
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [dialogOpen, setDialogOpen] = useState(false);
 //   const [creating, setCreating] = useState(false);
@@ -330,20 +330,20 @@
 //     pincode: "",
 //   });
 
-//   // Fetch inspectors on mount
+//   // Fetch inspections on mount
 //   useEffect(() => {
-//     fetchInspectors();
+//     fetchinspections();
 //   }, []);
 
-//   const fetchInspectors = async () => {
+//   const fetchinspections = async () => {
 //     try {
 //       setLoading(true);
-//       const data = await getMyInspectors();
-//       setInspectors(data);
+//       const data = await getMyinspections();
+//       setinspections(data);
 //     } catch (error) {
 //       toast({
 //         title: "Error",
-//         description: "Failed to fetch inspectors",
+//         description: "Failed to fetch inspections",
 //         variant: "destructive",
 //       });
 //     } finally {
@@ -386,11 +386,11 @@
 //         form.append("profileImage", fileInputRef.current.files[0]);
 //       }
 
-//       await createFranchiseInspector(form);
+//       await createFranchiseinspection(form);
       
 //       toast({
 //         title: "Success!",
-//         description: "Inspector added successfully",
+//         description: "inspection added successfully",
 //       });
 
 //       // Reset form and close dialog
@@ -399,11 +399,11 @@
 //       setDialogOpen(false);
       
 //       // Refresh list
-//       fetchInspectors();
+//       fetchinspections();
 //     } catch (error) {
 //       toast({
 //         title: "Error",
-//         description: "Failed to create inspector",
+//         description: "Failed to create inspection",
 //         variant: "destructive",
 //       });
 //     } finally {
@@ -425,7 +425,7 @@
 //       <div className="min-h-screen bg-background flex items-center justify-center">
 //         <div className="flex flex-col items-center gap-4">
 //           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-//           <p className="text-muted-foreground text-sm">Loading inspectors...</p>
+//           <p className="text-muted-foreground text-sm">Loading inspections...</p>
 //         </div>
 //       </div>
 //     );
@@ -439,7 +439,7 @@
 //         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
 //           <div>
 //             <h1 className="text-3xl lg:text-4xl font-semibold text-foreground tracking-tight">
-//               Inspectors
+//               inspections
 //             </h1>
 //             <p className="text-muted-foreground mt-1.5">
 //               Manage your franchise inspection team
@@ -447,28 +447,28 @@
 //           </div>
           
 //           <div className="flex items-center gap-3">
-//             {/* Inspector count badge */}
-//             {inspectors.length > 0 && (
+//             {/* inspection count badge */}
+//             {inspections.length > 0 && (
 //               <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full">
 //                 <Users className="h-4 w-4 text-muted-foreground" />
 //                 <span className="text-sm font-medium text-foreground">
-//                   {inspectors.length} {inspectors.length === 1 ? "Inspector" : "Inspectors"}
+//                   {inspections.length} {inspections.length === 1 ? "inspection" : "inspections"}
 //                 </span>
 //               </div>
 //             )}
             
-//             {/* Add Inspector Dialog */}
+//             {/* Add inspection Dialog */}
 //             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 //               <DialogTrigger asChild>
 //                 <Button className="gap-2 shadow-sm">
 //                   <Plus className="h-4 w-4" />
-//                   Add Inspector
+//                   Add inspection
 //                 </Button>
 //               </DialogTrigger>
               
 //               <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
 //                 <DialogHeader className="pb-2">
-//                   <DialogTitle className="text-xl font-semibold">Add New Inspector</DialogTitle>
+//                   <DialogTitle className="text-xl font-semibold">Add New inspection</DialogTitle>
 //                 </DialogHeader>
                 
 //                 <form onSubmit={handleSubmit} className="space-y-6 pt-2">
@@ -572,7 +572,7 @@
 //                     ) : (
 //                       <>
 //                         <UserPlus className="h-4 w-4" />
-//                         Add Inspector
+//                         Add inspection
 //                       </>
 //                     )}
 //                   </Button>
@@ -583,30 +583,30 @@
 //         </div>
 
 //         {/* Empty State */}
-//         {inspectors.length === 0 ? (
+//         {inspections.length === 0 ? (
 //           <div className="flex items-center justify-center py-20">
 //             <Card className="max-w-sm w-full p-8 text-center border border-border/50 shadow-sm">
 //               <div className="h-16 w-16 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-5">
 //                 <Shield className="h-8 w-8 text-muted-foreground" />
 //               </div>
 //               <h3 className="text-lg font-semibold text-foreground mb-2">
-//                 No inspectors yet
+//                 No inspections yet
 //               </h3>
 //               <p className="text-muted-foreground text-sm mb-6">
-//                 Get started by adding your first inspector to the team.
+//                 Get started by adding your first inspection to the team.
 //               </p>
 //               <Button onClick={() => setDialogOpen(true)} className="gap-2">
 //                 <Plus className="h-4 w-4" />
-//                 Add your first Inspector
+//                 Add your first inspection
 //               </Button>
 //             </Card>
 //           </div>
 //         ) : (
-//           /* Inspector Grid */
+//           /* inspection Grid */
 //           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-//             {inspectors.map((inspector, index) => (
+//             {inspections.map((inspection, index) => (
 //               <Card
-//                 key={inspector._id}
+//                 key={inspection._id}
 //                 className="group p-5 border border-border/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 animate-fade-in"
 //                 style={{ animationDelay: `${index * 50}ms` }}
 //               >
@@ -614,18 +614,18 @@
 //                 <div className="flex items-start gap-4 mb-4">
 //                   <div className="relative">
 //                     <img
-//                       src={inspector.profileImage}
-//                       alt={inspector.fullName}
+//                       src={inspection.profileImage}
+//                       alt={inspection.fullName}
 //                       className="h-14 w-14 rounded-full object-cover ring-2 ring-background shadow-sm"
 //                     />
 //                     <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 bg-success rounded-full border-2 border-card" />
 //                   </div>
 //                   <div className="flex-1 min-w-0">
 //                     <h3 className="font-semibold text-foreground truncate">
-//                       {inspector.fullName}
+//                       {inspection.fullName}
 //                     </h3>
 //                     <span className="inline-flex items-center px-2 py-0.5 mt-1 text-xs font-medium bg-primary/10 text-primary rounded-md">
-//                       Inspector
+//                       inspection
 //                     </span>
 //                   </div>
 //                 </div>
@@ -635,19 +635,19 @@
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground truncate">
-//                       {inspector.email}
+//                       {inspection.email}
 //                     </span>
 //                   </div>
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground">
-//                       {inspector.phone}
+//                       {inspection.phone}
 //                     </span>
 //                   </div>
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground">
-//                       {inspector.pincode}
+//                       {inspection.pincode}
 //                     </span>
 //                   </div>
 //                 </div>
@@ -656,7 +656,7 @@
 //                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
 //                   <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
 //                   <span className="text-xs text-muted-foreground">
-//                     Added {formatDate(inspector.createdAt)}
+//                     Added {formatDate(inspection.createdAt)}
 //                   </span>
 //                 </div>
 //               </Card>
@@ -668,7 +668,7 @@
 //   );
 // };
 
-// export default Inspectors;
+// export default inspections;
 
 
 // import { useState, useEffect, useRef } from "react";
@@ -709,14 +709,14 @@
 
 // // --- API Service Imports ---
 // import {
-//   getMyInspectors,
-//   createFranchiseInspector,
-//   updateFranchiseInspector,
-//   deleteFranchiseInspector,
+//   getMyinspections,
+//   createFranchiseinspection,
+//   updateFranchiseinspection,
+//   deleteFranchiseinspection,
 // } from "@/services/franchiseService";
 
 // // Types
-// interface Inspector {
+// interface inspection {
 //   _id: string;
 //   fullName: string;
 //   email: string;
@@ -726,18 +726,18 @@
 //   createdAt: string;
 // }
 
-// const Inspectors = () => {
+// const inspections = () => {
 //   const { toast } = useToast();
   
 //   // --- State Management ---
-//   const [inspectors, setInspectors] = useState<Inspector[]>([]);
+//   const [inspections, setinspections] = useState<inspection[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [dialogOpen, setDialogOpen] = useState(false);
 //   const [submitting, setSubmitting] = useState(false); // Unified loading for create/update
   
 //   // --- Edit/Delete State ---
 //   const [isEditing, setIsEditing] = useState(false);
-//   const [currentInspectorId, setCurrentInspectorId] = useState<string | null>(null);
+//   const [currentinspectionId, setCurrentinspectionId] = useState<string | null>(null);
 
 //   // --- Image Handling State ---
 //   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -755,20 +755,20 @@
 
 //   // --- Initial Fetch ---
 //   useEffect(() => {
-//     fetchInspectors();
+//     fetchinspections();
 //   }, []);
 
-//   const fetchInspectors = async () => {
+//   const fetchinspections = async () => {
 //     try {
 //       setLoading(true);
-//       const response = await getMyInspectors();
+//       const response = await getMyinspections();
 //       // Handle response structure safely
 //       const data = Array.isArray(response) ? response : (response as any).data || [];
-//       setInspectors(data);
+//       setinspections(data);
 //     } catch (error) {
 //       toast({
 //         title: "Error",
-//         description: "Failed to fetch inspectors.",
+//         description: "Failed to fetch inspections.",
 //         variant: "destructive",
 //       });
 //     } finally {
@@ -795,7 +795,7 @@
 //     setImagePreview(null);
 //     setImageFile(null);
 //     setIsEditing(false);
-//     setCurrentInspectorId(null);
+//     setCurrentinspectionId(null);
 //     if (fileInputRef.current) fileInputRef.current.value = "";
 //   };
 
@@ -804,17 +804,17 @@
 //     setDialogOpen(true);
 //   };
 
-//   const handleOpenEdit = (inspector: Inspector) => {
+//   const handleOpenEdit = (inspection: inspection) => {
 //     setIsEditing(true);
-//     setCurrentInspectorId(inspector._id);
+//     setCurrentinspectionId(inspection._id);
 //     setFormData({
-//       fullName: inspector.fullName,
-//       email: inspector.email,
-//       phone: inspector.phone,
-//       pincode: inspector.pincode,
+//       fullName: inspection.fullName,
+//       email: inspection.email,
+//       phone: inspection.phone,
+//       pincode: inspection.pincode,
 //       password: "", // Password remains empty on edit unless user wants to change it
 //     });
-//     setImagePreview(inspector.profileImage);
+//     setImagePreview(inspection.profileImage);
 //     setDialogOpen(true);
 //   };
 
@@ -828,7 +828,7 @@
 //     }
 
 //     if (!isEditing && !formData.password) {
-//       toast({ title: "Password Required", description: "Password is required for new inspectors.", variant: "destructive" });
+//       toast({ title: "Password Required", description: "Password is required for new inspections.", variant: "destructive" });
 //       return;
 //     }
 
@@ -852,19 +852,19 @@
 //         payload.append("profileImage", imageFile);
 //       }
 
-//       if (isEditing && currentInspectorId) {
+//       if (isEditing && currentinspectionId) {
 //         // --- UPDATE API Call ---
-//         await updateFranchiseInspector(currentInspectorId, payload);
-//         toast({ title: "Updated", description: "Inspector details updated successfully." });
+//         await updateFranchiseinspection(currentinspectionId, payload);
+//         toast({ title: "Updated", description: "inspection details updated successfully." });
 //       } else {
 //         // --- CREATE API Call ---
-//         await createFranchiseInspector(payload);
-//         toast({ title: "Created", description: "New inspector added successfully." });
+//         await createFranchiseinspection(payload);
+//         toast({ title: "Created", description: "New inspection added successfully." });
 //       }
 
 //       setDialogOpen(false);
 //       resetForm();
-//       fetchInspectors(); // Refresh List
+//       fetchinspections(); // Refresh List
 //     } catch (error: any) {
 //       console.error(error);
 //       toast({
@@ -878,12 +878,12 @@
 //   };
 
 //   const handleDelete = async (id: string) => {
-//     if(!confirm("Are you sure you want to delete this inspector? This action cannot be undone.")) return;
+//     if(!confirm("Are you sure you want to delete this inspection? This action cannot be undone.")) return;
     
 //     try {
-//         await deleteFranchiseInspector(id);
-//         toast({ title: "Deleted", description: "Inspector removed successfully." });
-//         fetchInspectors(); // Refresh List
+//         await deleteFranchiseinspection(id);
+//         toast({ title: "Deleted", description: "inspection removed successfully." });
+//         fetchinspections(); // Refresh List
 //     } catch (error: any) {
 //         toast({ 
 //           title: "Error", 
@@ -909,7 +909,7 @@
 //       <div className="min-h-screen bg-background flex items-center justify-center">
 //         <div className="flex flex-col items-center gap-4">
 //           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-//           <p className="text-muted-foreground text-sm">Loading inspectors...</p>
+//           <p className="text-muted-foreground text-sm">Loading inspections...</p>
 //         </div>
 //       </div>
 //     );
@@ -923,7 +923,7 @@
 //         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
 //           <div>
 //             <h1 className="text-3xl lg:text-4xl font-semibold text-foreground tracking-tight">
-//               Inspectors
+//               inspections
 //             </h1>
 //             <p className="text-muted-foreground mt-1.5">
 //               Manage your franchise inspection team
@@ -932,11 +932,11 @@
           
 //           <div className="flex items-center gap-3">
 //             {/* Count Badge */}
-//             {inspectors.length > 0 && (
+//             {inspections.length > 0 && (
 //               <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full">
 //                 <Users className="h-4 w-4 text-muted-foreground" />
 //                 <span className="text-sm font-medium text-foreground">
-//                   {inspectors.length} {inspectors.length === 1 ? "Inspector" : "Inspectors"}
+//                   {inspections.length} {inspections.length === 1 ? "inspection" : "inspections"}
 //                 </span>
 //               </div>
 //             )}
@@ -946,14 +946,14 @@
 //               <DialogTrigger asChild>
 //                 <Button className="gap-2 shadow-sm" onClick={handleOpenCreate}>
 //                   <Plus className="h-4 w-4" />
-//                   Add Inspector
+//                   Add inspection
 //                 </Button>
 //               </DialogTrigger>
               
 //               <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
 //                 <DialogHeader className="pb-2">
 //                   <DialogTitle className="text-xl font-semibold">
-//                     {isEditing ? "Edit Inspector" : "Add New Inspector"}
+//                     {isEditing ? "Edit inspection" : "Add New inspection"}
 //                   </DialogTitle>
 //                 </DialogHeader>
                 
@@ -1077,7 +1077,7 @@
 //                     ) : (
 //                       <>
 //                         {isEditing ? <Pencil className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-//                         {isEditing ? "Update Inspector" : "Add Inspector"}
+//                         {isEditing ? "Update inspection" : "Add inspection"}
 //                       </>
 //                     )}
 //                   </Button>
@@ -1088,7 +1088,7 @@
 //         </div>
 
 //         {/* Content Area */}
-//         {inspectors.length === 0 ? (
+//         {inspections.length === 0 ? (
 //           // Empty State
 //           <div className="flex items-center justify-center py-20">
 //             <Card className="max-w-sm w-full p-8 text-center border border-border/50 shadow-sm">
@@ -1096,23 +1096,23 @@
 //                 <Shield className="h-8 w-8 text-muted-foreground" />
 //               </div>
 //               <h3 className="text-lg font-semibold text-foreground mb-2">
-//                 No inspectors yet
+//                 No inspections yet
 //               </h3>
 //               <p className="text-muted-foreground text-sm mb-6">
-//                 Get started by adding your first inspector to the team.
+//                 Get started by adding your first inspection to the team.
 //               </p>
 //               <Button onClick={handleOpenCreate} className="gap-2">
 //                 <Plus className="h-4 w-4" />
-//                 Add your first Inspector
+//                 Add your first inspection
 //               </Button>
 //             </Card>
 //           </div>
 //         ) : (
 //           // Grid View
 //           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-//             {inspectors.map((inspector, index) => (
+//             {inspections.map((inspection, index) => (
 //               <Card
-//                 key={inspector._id}
+//                 key={inspection._id}
 //                 className="group relative p-5 border border-border/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 animate-fade-in"
 //                 style={{ animationDelay: `${index * 50}ms` }}
 //               >
@@ -1125,10 +1125,10 @@
 //                             </Button>
 //                         </DropdownMenuTrigger>
 //                         <DropdownMenuContent align="end">
-//                             <DropdownMenuItem onClick={() => handleOpenEdit(inspector)}>
+//                             <DropdownMenuItem onClick={() => handleOpenEdit(inspection)}>
 //                                 <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
 //                             </DropdownMenuItem>
-//                             <DropdownMenuItem onClick={() => handleDelete(inspector._id)} className="text-destructive focus:text-destructive">
+//                             <DropdownMenuItem onClick={() => handleDelete(inspection._id)} className="text-destructive focus:text-destructive">
 //                                 <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
 //                             </DropdownMenuItem>
 //                         </DropdownMenuContent>
@@ -1139,18 +1139,18 @@
 //                 <div className="flex items-start gap-4 mb-4">
 //                   <div className="relative">
 //                     <img
-//                       src={inspector.profileImage}
-//                       alt={inspector.fullName}
+//                       src={inspection.profileImage}
+//                       alt={inspection.fullName}
 //                       className="h-14 w-14 rounded-full object-cover ring-2 ring-background shadow-sm"
 //                     />
 //                     <div className="absolute -bottom-0.5 -right-0.5 h-4 w-4 bg-success rounded-full border-2 border-card" />
 //                   </div>
 //                   <div className="flex-1 min-w-0 pt-1">
 //                     <h3 className="font-semibold text-foreground truncate">
-//                       {inspector.fullName}
+//                       {inspection.fullName}
 //                     </h3>
 //                     <span className="inline-flex items-center px-2 py-0.5 mt-1 text-xs font-medium bg-primary/10 text-primary rounded-md">
-//                       Inspector
+//                       inspection
 //                     </span>
 //                   </div>
 //                 </div>
@@ -1160,19 +1160,19 @@
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground truncate">
-//                       {inspector.email}
+//                       {inspection.email}
 //                     </span>
 //                   </div>
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground">
-//                       {inspector.phone}
+//                       {inspection.phone}
 //                     </span>
 //                   </div>
 //                   <div className="flex items-center gap-3 text-sm">
 //                     <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
 //                     <span className="text-muted-foreground">
-//                       {inspector.pincode}
+//                       {inspection.pincode}
 //                     </span>
 //                   </div>
 //                 </div>
@@ -1181,7 +1181,7 @@
 //                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
 //                   <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
 //                   <span className="text-xs text-muted-foreground">
-//                     Added {formatDate(inspector.createdAt)}
+//                     Added {formatDate(inspection.createdAt)}
 //                   </span>
 //                 </div>
 //               </Card>
@@ -1193,20 +1193,20 @@
 //   );
 // };
 
-// export default Inspectors;
+// export default inspections;
 
 
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Users, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { InspectorCard } from "../franchise/pages/InspectorCard";
-import { InspectorForm } from "../franchise/pages/InspectorForm";
-import { getMyInspectors, createFranchiseInspector, updateFranchiseInspector, deleteFranchiseInspector } from "@/services/franchiseService";
+import { InspectionCard } from "../franchise/pages/InspectionCard";
+import { InspectionForm } from "../franchise/pages/InspectionForm";
+import { getMyinspections, createFranchiseinspection, updateFranchiseinspection, deleteFranchiseinspection } from "@/services/franchiseService";
 
-const Inspectors = () => {
+const Inspections = () => {
   const { toast } = useToast();
-  const [inspectors, setInspectors] = useState([]);
+  const [inspections, setinspections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -1217,13 +1217,13 @@ const Inspectors = () => {
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({ fullName: "", email: "", phone: "", pincode: "", password: "" });
 
-  useEffect(() => { fetchInspectors(); }, []);
+  useEffect(() => { fetchinspections(); }, []);
 
-  const fetchInspectors = async () => {
+  const fetchinspections = async () => {
     try {
       setLoading(true);
-      const res = await getMyInspectors();
-      setInspectors(Array.isArray(res) ? res : res.data || []);
+      const res = await getMyinspections();
+      setinspections(Array.isArray(res) ? res : res.data || []);
     } catch (err) { toast({ title: "Error", description: "Failed to fetch", variant: "destructive" }); }
     finally { setLoading(false); }
   };
@@ -1247,18 +1247,18 @@ const Inspectors = () => {
       Object.keys(formData).forEach(key => { if(formData[key]) payload.append(key, formData[key]); });
       if (imageFile) payload.append("profileImage", imageFile);
 
-      if (isEditing) await updateFranchiseInspector(currentId, payload);
-      else await createFranchiseInspector(payload);
+      if (isEditing) await updateFranchiseinspection(currentId, payload);
+      else await createFranchiseinspection(payload);
 
-      setDialogOpen(false); fetchInspectors();
-      toast({ title: "Success", description: `Inspector ${isEditing ? 'updated' : 'added'}` });
+      setDialogOpen(false); fetchinspections();
+      toast({ title: "Success", description: `inspection ${isEditing ? 'updated' : 'added'}` });
     } catch (err) { toast({ title: "Error", description: "Action failed", variant: "destructive" }); }
     finally { setSubmitting(false); }
   };
 
   const handleDelete = async (id) => {
-    if(!confirm("Delete this inspector?")) return;
-    try { await deleteFranchiseInspector(id); fetchInspectors(); } catch (err) { /* toast error */ }
+    if(!confirm("Delete this inspection?")) return;
+    try { await deleteFranchiseinspection(id); fetchinspections(); } catch (err) { /* toast error */ }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
@@ -1267,23 +1267,23 @@ const Inspectors = () => {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-between items-end mb-10">
         <div>
-          <h1 className="text-3xl font-semibold">Inspectors</h1>
+          <h1 className="text-3xl font-semibold">inspections</h1>
           <p className="text-muted-foreground">Manage your team</p>
         </div>
-        <Button onClick={handleOpenCreate} className="gap-2"><Plus className="h-4 w-4" /> Add Inspector</Button>
+        <Button onClick={handleOpenCreate} className="gap-2"><Plus className="h-4 w-4" /> Add inspection</Button>
       </div>
 
-      {inspectors.length === 0 ? (
-        <div className="text-center py-20 border rounded-lg"><Shield className="mx-auto h-12 w-12 mb-4" /><h3>No inspectors</h3></div>
+      {inspections.length === 0 ? (
+        <div className="text-center py-20 border rounded-lg"><Shield className="mx-auto h-12 w-12 mb-4" /><h3>No inspections</h3></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {inspectors.map((ins, i) => (
-            <InspectorCard key={ins._id} inspector={ins} onEdit={handleOpenEdit} onDelete={handleDelete} formatDate={(d) => new Date(d).toLocaleDateString()} />
+          {inspections.map((ins, i) => (
+            <InspectionCard key={ins._id} inspection={ins} onEdit={handleOpenEdit} onDelete={handleDelete} formatDate={(d) => new Date(d).toLocaleDateString()} />
           ))}
         </div>
       )}
 
-      <InspectorForm 
+      <InspectionForm 
         open={dialogOpen} setOpen={setDialogOpen} isEditing={isEditing} formData={formData} 
         setFormData={setFormData} imagePreview={imagePreview} fileInputRef={fileInputRef}
         handleImageChange={(e) => {
@@ -1296,4 +1296,4 @@ const Inspectors = () => {
   );
 };
 
-export default Inspectors;
+export default Inspections;

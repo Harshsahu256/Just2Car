@@ -715,6 +715,9 @@ const Login = () => {
         else if (userRole === "dealer") {
           navigate("/dealer/dashboard");
         } 
+         else if (userRole === "inspection") {
+  navigate("/inspection/dashboard");
+}
         else {
           // Agar koi naya role ho toh default home ya error
           console.warn("Unknown role:", userRole);

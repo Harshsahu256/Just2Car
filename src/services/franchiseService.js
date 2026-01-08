@@ -503,10 +503,10 @@ export const getTerritoryHistory = async () => {
 
 
 
-export const getMyInspectors = async () => {
+export const getMyinspections = async () => {
   const token = getAuthToken();
   const res = await axios.get(
-    FRANCHISE_API_ENDPOINTS.GET_INSPECTORS,
+    FRANCHISE_API_ENDPOINTS.GET_inspectionS,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -514,12 +514,12 @@ export const getMyInspectors = async () => {
   return res.data;
 };
  
-export const createFranchiseInspector = async (payload) => {
+export const createFranchiseinspection = async (payload) => {
   const token = getAuthToken();
   if (!token) throw new Error("No auth token found.");
  
   const res = await axios.post(
-    FRANCHISE_API_ENDPOINTS.CREATE_INSPECTORS,
+    FRANCHISE_API_ENDPOINTS.CREATE_inspectionS,
     payload,
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -565,13 +565,13 @@ export const approveCarListing = async (carId, qualityRating) => {
 };
  
 
-export const assignInspector = async (payload) => {
+export const assigninspection = async (payload) => {
   
   const token = getAuthToken();
   if (!token) throw new Error("No auth token found.");
 
   const res = await axios.put(
-    FRANCHISE_API_ENDPOINTS.ASSIGN_INSPECTOR,
+    FRANCHISE_API_ENDPOINTS.ASSIGN_inspection,
     payload,
     {
       headers: {
@@ -599,12 +599,12 @@ export const getCompletedInspectionByCarId = async (carId) => {
 };
 
 
-export const updateFranchiseInspector = async (id, formData) => {
+export const updateFranchiseinspection = async (id, formData) => {
   const token = getAuthToken();
   if (!token) throw new Error("No auth token found.");
 
   const res = await axios.put(
-    FRANCHISE_API_ENDPOINTS.UPDATE_INSPECTOR(id),
+    FRANCHISE_API_ENDPOINTS.UPDATE_inspection(id),
     formData, // FormData (name, phone, pincode, profileImage)
     {
       headers: {
@@ -618,12 +618,12 @@ export const updateFranchiseInspector = async (id, formData) => {
 };
 
 
-export const deleteFranchiseInspector = async (id) => {
+export const deleteFranchiseinspection = async (id) => {
   const token = getAuthToken();
   if (!token) throw new Error("No auth token found.");
 
   const res = await axios.delete(
-    FRANCHISE_API_ENDPOINTS.DELETE_INSPECTOR(id),
+    FRANCHISE_API_ENDPOINTS.DELETE_inspection(id),
     {
       headers: {
         Authorization: `Bearer ${token}`,

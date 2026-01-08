@@ -4,14 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Camera, Lock, Loader2, Pencil, UserPlus, Plus } from "lucide-react";
 
-export const InspectorForm = ({ 
+export const InspectionForm = ({ 
   open, setOpen, isEditing, formData, setFormData, 
   imagePreview, fileInputRef, handleImageChange, handleSubmit, submitting 
 }: any) => (
   <Dialog open={open} onOpenChange={setOpen}>
     <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>{isEditing ? "Edit Inspector" : "Add New Inspector"}</DialogTitle>
+        <DialogTitle>{isEditing ? "Edit inspection" : "Add New inspection"}</DialogTitle>
       </DialogHeader>
       
       <form onSubmit={handleSubmit} className="space-y-6 pt-2">
@@ -55,7 +55,7 @@ export const InspectorForm = ({
 
         <Button type="submit" className="w-full h-11" disabled={submitting}>
           {submitting ? <Loader2 className="animate-spin mr-2" /> : (isEditing ? <Pencil className="mr-2" /> : <UserPlus className="mr-2" />)}
-          {isEditing ? "Update Inspector" : "Add Inspector"}
+          {isEditing ? "Update inspection" : "Add inspection"}
         </Button>
       </form>
     </DialogContent>

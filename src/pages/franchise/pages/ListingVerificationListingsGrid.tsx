@@ -3,7 +3,7 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 import ListingVerificationCarCard from "./ListingVerificationCarCard";
-import { CarListing, TabStatus, statusConfig, Inspector } from "../listing-verification/ListingVerification"; // Import types
+import { CarListing, TabStatus, statusConfig, inspection } from "../listing-verification/ListingVerification"; // Import types
 
 interface ListingVerificationListingsGridProps {
   loading: boolean;
@@ -11,9 +11,9 @@ interface ListingVerificationListingsGridProps {
   listings: CarListing[];
   activeTab: TabStatus;
   statusConfig: typeof statusConfig; // Use typeof to correctly type statusConfig
-  inspectors: Inspector[];
-  getInspectorName: (id?: string) => string;
-  getInspectorPhone: (id?: string) => string;
+  inspections: inspection[];
+  getinspectionName: (id?: string) => string;
+  getinspectionPhone: (id?: string) => string;
   formatDate: (d?: string) => string;
   formatPrice: (price?: number) => string;
   onScheduleClick: (car: CarListing) => void;
@@ -31,9 +31,9 @@ const ListingVerificationListingsGrid: React.FC<ListingVerificationListingsGridP
   listings,
   activeTab,
   statusConfig,
-  inspectors,
-  getInspectorName,
-  getInspectorPhone,
+  inspections,
+  getinspectionName,
+  getinspectionPhone,
   formatDate,
   formatPrice,
   onScheduleClick,
@@ -78,9 +78,9 @@ const ListingVerificationListingsGrid: React.FC<ListingVerificationListingsGridP
           car={car}
           activeTab={activeTab}
           statusConfig={statusConfig}
-          inspectors={inspectors}
-          getInspectorName={getInspectorName}
-          getInspectorPhone={getInspectorPhone}
+          inspections={inspections}
+          getinspectionName={getinspectionName}
+          getinspectionPhone={getinspectionPhone}
           formatDate={formatDate}
           formatPrice={formatPrice}
           onScheduleClick={onScheduleClick}

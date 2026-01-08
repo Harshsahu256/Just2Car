@@ -81,16 +81,16 @@ DELETE_PROFILE: `${FRANCHISE_BASE_URL}/profile`,
 
   // ================= INSPECTION APIs =================
 
-  GET_INSPECTORS: `${FRANCHISE_BASE_URL}/inspectors/all`,
+  GET_inspectionS: `${FRANCHISE_BASE_URL}/inspections/all`,
 
-   CREATE_INSPECTORS:`${FRANCHISE_BASE_URL}/inspectors/create`,
+   CREATE_inspectionS:`${FRANCHISE_BASE_URL}/inspections/create`,
 
-  UPDATE_INSPECTOR: (id) => `${FRANCHISE_BASE_URL}/inspectors/${id}`, // Changed 'inspector' to 'inspectors'
-  DELETE_INSPECTOR: (id) => `${FRANCHISE_BASE_URL}/inspectors/${id}`, // Changed 'inspector' to 'inspectors'
+  UPDATE_inspection: (id) => `${FRANCHISE_BASE_URL}/inspections/${id}`, // Changed 'inspection' to 'inspections'
+  DELETE_inspection: (id) => `${FRANCHISE_BASE_URL}/inspections/${id}`, // Changed 'inspection' to 'inspections'
 
 SCHEDULE_INSPECTION: `${FRANCHISE_BASE_URL}/inspection/schedule`,
 
-ASSIGN_INSPECTOR: `${FRANCHISE_BASE_URL}/inspection/assign`,
+ASSIGN_inspection: `${FRANCHISE_BASE_URL}/inspection/assign`,
 
   GET_COMPLETED_INSPECTION_BY_CAR:`${FRANCHISE_BASE_URL}/inspection/completed`, // carId later
  
